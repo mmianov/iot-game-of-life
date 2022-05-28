@@ -68,7 +68,9 @@ int main(){
     while(1){
         char received_message[MAX_MSG_SIZE];
         struct sockaddr_in node_addr;
+         printf("Waiting for data ...");
         int received_data = recvfrom(server_socket, received_message, MAX_MSG_SIZE, 0, (struct sockaddr*)&node_addr, &node_addr_len);
+        printf("Received message: %s",received_message);
 
 
     }
