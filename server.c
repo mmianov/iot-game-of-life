@@ -18,12 +18,12 @@
 
 int server_socket;
 
-struct sockaddr_in node_addr
-struct sockaddr_in nodes[MAX_NODES]
+struct sockaddr_in node_addr;
+struct sockaddr_in nodes[MAX_NODES];
 int addr_len = sizeof(struct sockaddr_in);
 
 char received_message[MAX_MSG_SIZE];
-char register_message[MAX_MSG_SIZE]
+char register_message[MAX_MSG_SIZE];
 
 // initializes UDP server
 int initialize_server(int *server_socket,int port){
@@ -75,21 +75,21 @@ void clear_msg_buffer(char *message){
 }
 
 // opens registration for nodes
-int open_registration(fd_set *read_fds, fd_set *write_fds){
-    printf("[*] Node registration is now open ...")
+int open_registration(){
+    printf("[*] Node registration is now open ...");
     int num_of_nodes = 0;
     fd_set read_fds;
     fd_set write_fds;
 
     for(;;){
         // reset file descriptor sets
-        FD_ZERO(read_fds);
-        FD_ZERO(write_fds);
+        FD_ZERO(&read_fds);
+        FD_ZERO(&write_fds);
         // add server socket file descriptor to fd read set and stdin to fd write set
-        FD_SET(server_socket, read_fds);
-        FD_SET(STDIN_FILENO, write_fds);
+        FD_SET(server_socket,&read_fds);
+        FD_SET(STDIN_FILENO, &write_fds);
         // wait for server socket fds to accept new connection or wait for keyboard input
-        activity = select(server_socket+1, read_fds, write_fds, NULL, NULL); // no timeout
+        select(server_socket+1, &read_fds, &write_fds, NULL, NULL); // no timeout
 
         // check for new connection to server
         if(FD_ISSET(server_socket, &read_fds)) {
@@ -103,21 +103,20 @@ int open_registration(fd_set *read_fds, fd_set *write_fds){
             }
 
         if(num_of_nodes >=MAX_NODES){
-            printf("[*]Maximum node amount reached!")
+            printf("[*]Maximum node amount reached!");
             break;
         }
         // check for user input to stop registration
         if(FD_ISSET(STDIN_FILENO, &write_fds)){
             char user_input[10];
             read(STDIN_FILENO, user_input, sizeof(user_input));
-            if(strcmp(user_input),"stop"){
+            if(strcmp(user_input,"stop")){
                 printf("[*]Node registration finished");
                 break;
             }
         }
       }
     return 1;
-    }
 }
 
 int main(){
