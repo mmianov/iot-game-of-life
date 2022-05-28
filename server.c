@@ -19,14 +19,14 @@ int server_socket;
 
 
 // initializes UDP server
-int initialize_server(int port, int *server_socket){
+int initialize_server(int *server_socket,int port){
 
     // get file descriptor for server socket
     *server_socket = socket(AF_INET, SOCK_DGRAM,0);
     // check for errors
     if (*server_socket < 0){
         perror("Socket: ");
-        return -1
+        return -1;
     }
 
     // create data structure to hold server parameters
@@ -34,15 +34,15 @@ int initialize_server(int port, int *server_socket){
     memset(&server_addr,0,sizeof(server_addr));
     server_addr.sin_family = AF_INET;
     server_addr.sin_addr.s_addr = INADDR_ANY;
-    server_addr.sin_port = htons(SERVER_PORT);
+    server_addr.sin_port = htons(port);
 
     // assign the address specified by server_addr to server_socket file descriptor
-    if(bind(*listen_socket,(struct sockaddr*)&)server_addr, sizeof(struct sockaddr) != 0){
+    if(bind(*server_socket,(struct sockaddr*)&)server_addr, sizeof(struct sockaddr) != 0){
         perror("Bind:");
         return -1;
     }
 
-    printf("Server initialized on %s:%d\n",inet_ntoa(server_addr.sin_addr), ntohs(server_addr.sin_port))
+    printf("Server initialized on %s:%d\n",inet_ntoa(server_addr.sin_addr), ntohs(server_addr.sin_port));
 }
 
 // receives data on server socket
@@ -50,11 +50,11 @@ void receive_data(int *server_socket, char *message){
     struct sockaddr_in node_addr;
 
     // receive incoming data
-    int received_data = recvfrom(*server_socket, *message, MAX_MSG_SIZE, 0, (struct sockaddr*)&node_addr, &sizeof(node_addr));
+    int received_data = recvfrom(*server_socket, *message, MAX_MSG_SIZE, 0, (struct sockaddr*)&node_addr, &(sizeof(node_addr)));
 }
 
 int main(){
-    if (initialize_server(&server_socket) != 0){
+    if (initialize_server(&server_socket, SERVER_PORT) != 0){
         exit(EXIT_FAILURE);
     }
 
