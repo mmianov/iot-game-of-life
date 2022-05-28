@@ -67,12 +67,10 @@ int main(){
 
     while(1){
         char received_message[MAX_MSG_SIZE];
-        if(receive_data(received_message)){
-       	   printf("Received message: %s", received_message);
-	}
-	else{
-           printf("No message received");
-	}
+        struct sockaddr_in node_addr;
+        int received_data = recvfrom(server_socket, received_message, MAX_MSG_SIZE, 0, (struct sockaddr*)&node_addr, &node_addr_len);
+
+
     }
 
 
