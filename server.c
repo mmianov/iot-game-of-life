@@ -76,7 +76,7 @@ void clear_msg_buffer(char *message){
 
 // opens registration for nodes
 int open_registration(){
-    printf("[*] Node registration is now open ...");
+    printf("[*] Node registration is now open ...\n\r");
     int num_of_nodes = 0;
     fd_set read_fds;
     fd_set write_fds;
@@ -93,29 +93,31 @@ int open_registration(){
         FD_SET(server_socket,&read_fds);
         FD_SET(STDIN_FILENO, &write_fds);
         // wait for server socket fds to accept new connection or wait for keyboard input
-        select(server_socket+1, &read_fds, &write_fds, NULL, timeout); // no timeout
+        select(server_socket+1, &read_fds, &write_fds, NULL, NULL); // no timeout
 
         // check for new connection to server
+	//printf("Server socket: %d", FD_ISSET(server_socket,&read_fds));
         if(FD_ISSET(server_socket, &read_fds)) {
                 // receive message and save node address to node_addr
                 recvfrom(server_socket, register_message, MAX_MSG_SIZE, 0, (struct sockaddr*)&node_addr, &addr_len);
                 nodes[num_of_nodes] = node_addr;
-                printf("Node number &d connected: %s",num_of_nodes+1,inet_ntoa(node_addr.sin_addr));
+                printf("Node number &d connected: %s\n\r",num_of_nodes+1,inet_ntoa(node_addr.sin_addr));
                 num_of_nodes ++;
                 // reset node_addr placeholder
                 memset(&node_addr, 0, sizeof(node_addr));
             }
 
         if(num_of_nodes >=MAX_NODES){
-            printf("[*]Maximum node amount reached!");
+            printf("[*]Maximum node amount reached!\n\r");
             break;
         }
         // check for user input to stop registration
         if(FD_ISSET(STDIN_FILENO, &write_fds)){
-            char user_input[10];
+            char user_input[4];
             read(STDIN_FILENO, user_input, sizeof(user_input));
-            if(strcmp(user_input,"stop")){
-                printf("[*]Node registration finished");
+	    printf("Wpisano: %s\r",user_input);
+            if(!strcmp(user_input,"stop")){
+                printf("[*]Node registration finished\r");
                 break;
             }
         }
