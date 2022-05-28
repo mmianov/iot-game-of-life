@@ -96,31 +96,34 @@ int open_registration(){
         select(server_socket+1, &read_fds, &write_fds, NULL, NULL); // no timeout
 
         // check for new connection to server
-	//printf("Server socket: %d", FD_ISSET(server_socket,&read_fds));
-        if(FD_ISSET(server_socket, &read_fds)) {
-                // receive message and save node address to node_addr
-                recvfrom(server_socket, register_message, MAX_MSG_SIZE, 0, (struct sockaddr*)&node_addr, &addr_len);
-                nodes[num_of_nodes] = node_addr;
-                printf("Node number &d connected: %s\n\r",num_of_nodes+1,inet_ntoa(node_addr.sin_addr));
-                num_of_nodes ++;
-                // reset node_addr placeholder
-                memset(&node_addr, 0, sizeof(node_addr));
+	    for(int i=0;i<FD_SETSIZE;i++){
+            if(FD_ISSET(i, &read_fds) && i == server_socket) {
+                    // receive message and save node address to node_addr
+                    recvfrom(server_socket, register_message, MAX_MSG_SIZE, 0, (struct sockaddr*)&node_addr, &addr_len);
+                    nodes[num_of_nodes] = node_addr;
+                    printf("Node number &d connected: %s\n\r",num_of_nodes+1,inet_ntoa(node_addr.sin_addr));
+                    num_of_nodes ++;
+                    // reset node_addr placeholder
+                    memset(&node_addr, 0, sizeof(node_addr));
+                }
+            // check for user input to stop registration
+            if(FD_ISSET(STDIN_FILENO, &write_fds)){
+                char user_input[4];
+                read(STDIN_FILENO, user_input, sizeof(user_input));
+            printf("Wpisano: %s\r",user_input);
+                if(!strcmp(user_input,"stop")){
+                    printf("[*]Node registration finished\r");
+                    break;
+                }
             }
+        }
 
         if(num_of_nodes >=MAX_NODES){
-            printf("[*]Maximum node amount reached!\n\r");
-            break;
-        }
-        // check for user input to stop registration
-        if(FD_ISSET(STDIN_FILENO, &write_fds)){
-            char user_input[4];
-            read(STDIN_FILENO, user_input, sizeof(user_input));
-	    printf("Wpisano: %s\r",user_input);
-            if(!strcmp(user_input,"stop")){
-                printf("[*]Node registration finished\r");
+                printf("[*]Maximum node amount reached!\n\r");
                 break;
             }
-        }
+
+
       }
     return 1;
 }
