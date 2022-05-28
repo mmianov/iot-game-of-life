@@ -47,12 +47,16 @@ int main(){
 		printf("ERROR %s (%s:%d) \n", strerror(errno), __FILE__,__LINE__);
 	}
 
+	struct timeval timeout;
+	timeout.tv_sec = 0;
+	timeout.tv_usec = 1000;
+
 
 	for(;;) {
 
 		FD_ZERO(&read_fds);
 		FD_SET(server_socket, &read_fds);
-		activity = select(server_socket+1, &read_fds, NULL, NULL, 100);
+		activity = select(server_socket+1, &read_fds, NULL, NULL, &timeout);
 
         // jeśli nowe połączenie (?)
 		if(FD_ISSET(server_socket, &read_fds)) {
@@ -71,7 +75,6 @@ int main(){
 
     }
 
-	freeaddrinfo(res);
 	close(server_socket);
 
 }
