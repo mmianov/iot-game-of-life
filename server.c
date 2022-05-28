@@ -43,11 +43,12 @@ int initialize_server(int *server_socket,int port){
     }
 
     printf("Server initialized on %s:%d\n",inet_ntoa(server_addr.sin_addr), ntohs(server_addr.sin_port));
-    return 0;
+    return 1;
 }
 
 // receives data on server socket
 int receive_data(char *message){
+    memset(message, 0, sizeof(message));
     struct sockaddr_in node_addr;
 
     // receive incoming data
@@ -61,18 +62,16 @@ int receive_data(char *message){
 }
 
 int main(){
-    if (initialize_server(&server_socket, SERVER_PORT) != 0){
-        exit(EXIT_FAILURE);
-    }
-
-    while(1){
-        char received_message[MAX_MSG_SIZE];
-        struct sockaddr_in node_addr;
-         printf("Waiting for data ...");
-        int received_data = recvfrom(server_socket, received_message, MAX_MSG_SIZE, 0, (struct sockaddr*)&node_addr, &node_addr_len);
-        printf("Received message: %s",received_message);
+    initialize_server(&server_socket, SERVER_PORT);
+    printf("Przed while\n");
 
 
+   for(;;){
+     char received_message[MAX_MSG_SIZE];
+     struct sockaddr_in node_addr;
+     receive_data(received_message);  
+     printf("Received message: %s",received_message);
+    
     }
 
 
