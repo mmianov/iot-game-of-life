@@ -14,9 +14,16 @@
 
 #define SERVER_PORT 17210
 #define MAX_MSG_SIZE 50
+#define MAX_NODES 2
 
 int server_socket;
-int node_addr_len = sizeof(struct sockaddr_in);
+
+struct sockaddr_in node_addr
+struct sockaddr_in nodes[MAX_NODES]
+int addr_len = sizeof(struct sockaddr_in);
+
+char received_message[MAX_MSG_SIZE];
+char register_message[MAX_MSG_SIZE]
 
 // initializes UDP server
 int initialize_server(int *server_socket,int port){
@@ -48,11 +55,12 @@ int initialize_server(int *server_socket,int port){
 
 // receives data on server socket
 int receive_data(char *message){
+    // clear buffer
     memset(message, 0, sizeof(message));
     struct sockaddr_in node_addr;
 
     // receive incoming data
-    int received_data = recvfrom(server_socket, message, MAX_MSG_SIZE, 0, (struct sockaddr*)&node_addr, &node_addr_len);
+    int received_data = recvfrom(server_socket, message, MAX_MSG_SIZE, 0, (struct sockaddr*)&node_addr, &addr_len);
     if (received_data > 0){
 	return 1;
     }
@@ -61,18 +69,65 @@ int receive_data(char *message){
     }
 }
 
+// clears message buffer
+void clear_msg_buffer(char *message){
+    memset(message, 0, sizeof(message));
+}
+
+// opens registration for nodes
+int open_registration(fd_set *read_fds, fd_set *write_fds){
+    printf("[*] Node registration is now open ...")
+    int num_of_nodes = 0;
+    fd_set read_fds;
+    fd_set write_fds;
+
+    for(;;){
+        // reset file descriptor sets
+        FD_ZERO(read_fds);
+        FD_ZERO(write_fds);
+        // add server socket file descriptor to fd read set and stdin to fd write set
+        FD_SET(server_socket, read_fds);
+        FD_SET(STDIN_FILENO, write_fds);
+        // wait for server socket fds to accept new connection or wait for keyboard input
+        activity = select(server_socket+1, read_fds, write_fds, NULL, NULL); // no timeout
+
+        // check for new connection to server
+        if(FD_ISSET(server_socket, &read_fds)) {
+                // receive message and save node address to node_addr
+                recvfrom(server_socket, register_message, MAX_MSG_SIZE, 0, (struct sockaddr*)&node_addr, &addr_len);
+                nodes[num_of_nodes] = node_addr;
+                printf("Node number &d connected: %s",num_of_nodes+1,inet_ntoa(node_addr.sin_addr));
+                num_of_nodes ++;
+                // reset node_addr placeholder
+                memset(&node_addr, 0, sizeof(node_addr));
+            }
+
+        if(num_of_nodes >=MAX_NODES){
+            printf("[*]Maximum node amount reached!")
+            break;
+        }
+        // check for user input to stop registration
+        if(FD_ISSET(STDIN_FILENO, &write_fds)){
+            char user_input[10];
+            read(STDIN_FILENO, user_input, sizeof(user_input));
+            if(strcmp(user_input),"stop"){
+                printf("[*]Node registration finished");
+                break;
+            }
+        }
+      }
+    return 1;
+    }
+}
+
 int main(){
     initialize_server(&server_socket, SERVER_PORT);
-    printf("Przed while\n");
-
-
-   for(;;){
-     char received_message[MAX_MSG_SIZE];
-     struct sockaddr_in node_addr;
-     receive_data(received_message);  
-     printf("Received message: %s",received_message);
-    
-    }
+    open_registration();
+//   for(;;){
+//     receive_data(received_message);
+//     printf("Received message: %s",received_message);
+//
+//    }
 
 
 }
