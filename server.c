@@ -37,7 +37,7 @@ int initialize_server(int *server_socket,int port){
     server_addr.sin_port = htons(port);
 
     // assign the address specified by server_addr to server_socket file descriptor
-    if(bind(*server_socket,(struct sockaddr*)&server_addr, sizeof(struct sockaddr)) != 0){
+    if(bind(*server_socket,(struct sockaddr*)&server_addr, sizeof(server_addr)) != 0){
         perror("Bind:");
         return -1;
     }
@@ -47,11 +47,17 @@ int initialize_server(int *server_socket,int port){
 }
 
 // receives data on server socket
-void receive_data(int *server_socket, char *message){
+int receive_data(char *message){
     struct sockaddr_in node_addr;
 
     // receive incoming data
-    int received_data = recvfrom(*server_socket, message, MAX_MSG_SIZE, 0, (struct sockaddr*)&node_addr, &node_addr_len);
+    int received_data = recvfrom(server_socket, message, MAX_MSG_SIZE, 0, (struct sockaddr*)&node_addr, &node_addr_len);
+    if (received_data > 0){
+	return 1;
+    }
+    else{
+        return -1; 
+    }
 }
 
 int main(){
@@ -61,9 +67,12 @@ int main(){
 
     while(1){
         char received_message[MAX_MSG_SIZE];
-        receive_data(&server_socket, received_message);
-        printf("Received message: %s", received_message);
-
+        if(receive_data(received_message)){
+       	   printf("Received message: %s", received_message);
+	}
+	else{
+           printf("No message received");
+	}
     }
 
 
