@@ -81,6 +81,10 @@ int open_registration(){
     fd_set read_fds;
     fd_set write_fds;
 
+    struct timeval timeout;
+    timeout.tv_sec = 0;
+    timeout.tv_usec =500000;
+
     for(;;){
         // reset file descriptor sets
         FD_ZERO(&read_fds);
@@ -89,7 +93,7 @@ int open_registration(){
         FD_SET(server_socket,&read_fds);
         FD_SET(STDIN_FILENO, &write_fds);
         // wait for server socket fds to accept new connection or wait for keyboard input
-        select(server_socket+1, &read_fds, &write_fds, NULL, NULL); // no timeout
+        select(server_socket+1, &read_fds, &write_fds, NULL, timeout); // no timeout
 
         // check for new connection to server
         if(FD_ISSET(server_socket, &read_fds)) {
