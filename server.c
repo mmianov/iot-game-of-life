@@ -16,7 +16,7 @@
 #define MAX_MSG_SIZE 50
 
 int server_socket;
-
+int node_addr_len = sizeof(struct sockaddr_in);
 
 // initializes UDP server
 int initialize_server(int *server_socket,int port){
@@ -37,12 +37,13 @@ int initialize_server(int *server_socket,int port){
     server_addr.sin_port = htons(port);
 
     // assign the address specified by server_addr to server_socket file descriptor
-    if(bind(*server_socket,(struct sockaddr*)&)server_addr, sizeof(struct sockaddr) != 0){
+    if(bind(*server_socket,(struct sockaddr*)&server_addr, sizeof(struct sockaddr)) != 0){
         perror("Bind:");
         return -1;
     }
 
     printf("Server initialized on %s:%d\n",inet_ntoa(server_addr.sin_addr), ntohs(server_addr.sin_port));
+    return 0;
 }
 
 // receives data on server socket
@@ -50,7 +51,7 @@ void receive_data(int *server_socket, char *message){
     struct sockaddr_in node_addr;
 
     // receive incoming data
-    int received_data = recvfrom(*server_socket, *message, MAX_MSG_SIZE, 0, (struct sockaddr*)&node_addr, &(sizeof(node_addr)));
+    int received_data = recvfrom(*server_socket, message, MAX_MSG_SIZE, 0, (struct sockaddr*)&node_addr, &node_addr_len);
 }
 
 int main(){
