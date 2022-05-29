@@ -57,15 +57,15 @@ int initialize_server(int *server_socket,int port){
 }
 
 // receives data on server socket
-struct sockaddr_in receive_data(char *message){
+int receive_data(char *message,struct sockaddr_in *node_addr){
     // clear buffer
     memset(message, 0, sizeof(message));
-    struct sockaddr_in node_addr;
+    //struct sockaddr_in node_addr;
 
     // receive incoming data
     int received_data = recvfrom(server_socket, message, MAX_MSG_SIZE, 0, (struct sockaddr*)&node_addr, &addr_len);
-    // return node struct
-    return node_addr;
+    if(received_data > 0) return 1;
+    return 0;
 }
 
 
@@ -137,13 +137,13 @@ int server_register_nodes(){
         if(FD_ISSET(server_socket, &read_fds)) {
             // receive message
             memset(&node_addr,0,sizeof(node_addr));
-            node_addr = receive_data(register_message);
+            receive_data(register_message,node_addr);
             printf("Debug: new message received");
-//            if(handle_message(register_message) == GAME_STATE_REGISTER && !is_registered(node_addr,nodes_to_connect)){
-//                register_nodes[num_of_nodes] = node_addr;
-//                num_of_nodes ++;
-//                printf("Node  %d/%d connected: %s\n\r",num_of_nodes,nodes_to_connect,inet_ntoa(node_addr.sin_addr));
-//            }
+            if(handle_message(register_message) == GAME_STATE_REGISTER && !is_registered(node_addr,nodes_to_connect)){
+                register_nodes[num_of_nodes] = node_addr;
+                num_of_nodes ++;
+                printf("Node  %d/%d connected: %s\n\r",num_of_nodes,nodes_to_connect,inet_ntoa(node_addr.sin_addr));
+            }
         }
             if(num_of_nodes >=nodes_to_connect){
                 printf("[*]All nodes connected! Closing registration ...\n\r");
