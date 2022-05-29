@@ -81,16 +81,17 @@ int handle_message(char *message){
 
    // TODO : Maybe change to only 2 first bits and payload?
    // check codename and argument bits
-   int first_bit = (message[0] >> 0) & 1;
-   int second_bit = (message[0] >> 1) & 1;
-   int third_bit = (message[0] >> 2) & 1;
-   int fourth_bit = (message[0] >> 3) & 1;
+   int first_bit = (*message[0] >> 0) & 1;
+   int second_bit = (*message[0] >> 1) & 1;
+   int third_bit = (*message[0] >> 2) & 1;
+   int fourth_bit = (*message[0] >> 3) & 1;
 
    if (first_bit == 0 && second_bit == 0 && third_bit == 0 && fourth_bit == 1){
+        printf("Debug: received register message");
         return GAME_STATE_REGISTER;
    }
    else if (first_bit == 1 && second_bit == 0 && third_bit == 1 && fourth_bit== 1){
-        return GAME_STATE_REGISTER;
+        return NODE_AREA_UPDATE;
    }
    else return -1;
 }
@@ -102,9 +103,8 @@ int is_registered(struct sockaddr_in node, int nodes_to_connect){
             return 1;
         }
     }
-
+    printf("Debug: node is not registered!");
     return 0;
-
 }
 
 // clears message buffer
@@ -136,9 +136,10 @@ int server_register_nodes(){
         // check for new connection to server
         if(FD_ISSET(server_socket, &read_fds)) {
             // receive message
+            printf("Debug: serve socket activity");
             memset(&node_addr,0,sizeof(node_addr));
             node_addr = receive_data(register_message);
-
+            printf("Debug: new message received");
             if(handle_message(register_message) == GAME_STATE_REGISTER && !is_registered(node_addr,nodes_to_connect)){
                 register_nodes[num_of_nodes] = node_addr;
                 num_of_nodes ++;
