@@ -98,7 +98,7 @@ int is_registered(struct sockaddr_in node, int nodes_to_connect){
     for(int i=0;i<nodes_to_connect;i++){
         // check if node IP address is already in possible_nodes set
         if(node.sin_addr.s_addr == nodes[i].sin_addr.s_addr){
-            printf("Debug: node already registered!\n");
+            printf("Debug: node %s already registered!\n",inet_ntoa(node.sin_addr));
             return 1;
         }
     }
