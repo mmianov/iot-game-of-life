@@ -94,35 +94,33 @@ int open_registration(){
 
     for(;;){
         // reset file descriptor sets
-        //FD_ZERO(&read_fds);
-        //FD_ZERO(&write_fds);
+        FD_ZERO(&read_fds);
+        FD_ZERO(&write_fds);
         // add server socket file descriptor to fd read set and stdin to fd write set
-        //FD_SET(server_socket,&read_fds);
-        //FD_SET(STDIN_FILENO, &write_fds);
+        FD_SET(server_socket,&read_fds);
+        FD_SET(STDIN_FILENO, &write_fds);
         // wait for server socket fds to accept new connection or wait for keyboard input
-        read_fds_ready = read_fds;
-        write_fds_ready = write_fds;
-        select(server_socket+1, &read_fds_ready, &write_fds_ready, NULL, &timeout); // no timeout
+        select(server_socket+1, &read_fds, &write_fds, NULL, &timeout); // no timeout
 
         // check for new connection to server
-            if(FD_ISSET(server_socket, &read_fds_ready)) {
+            if(FD_ISSET(server_socket, &read_fds)) {
                    // receive message and save node address to node_addr
 		    memset(&node_addr,0,sizeof(node_addr));
                     recvfrom(server_socket, register_message, MAX_MSG_SIZE, 0, (struct sockaddr*)&node_addr, &addr_len);
                     nodes[num_of_nodes] = node_addr;
                     printf("Node number %d connected: %s\n\r",num_of_nodes+1,inet_ntoa(nodes[num_of_nodes].sin_addr));
                     num_of_nodes ++;
-                    FD_CLR(server_socket,&read_fds_ready);
 		  printf("Connection!\n\r");
                 }
             // check for user input to stop registration
-             if(FD_ISSET(STDIN_FILENO, &write_fds_ready)){
+             if(FD_ISSET(STDIN_FILENO, &write_fds)){
                 char user_input[4];
-                read(STDIN_FILENO, user_input, sizeof(user_input));
-                printf("Wpisano: %s\r",user_input);
-                if(!strcmp(user_input,"stop")){
-                    printf("[*]Node registration finished\r");
-                    break;
+                if(read(STDIN_FILENO, user_input, sizeof(user_input))){
+                    printf("Wpisano: %s\r",user_input);
+                    if(!strcmp(user_input,"stop")){
+                        printf("[*]Node registration finished\r");
+                        break;
+                    }
                 }
 		        memset(&user_input,0,sizeof(user_input));
             }
