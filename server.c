@@ -135,5 +135,7 @@ int main(){
 //
 //    }
 
+    close(server_socket);
+
 
 }
