@@ -141,7 +141,7 @@ int open_registration(){
 //            num_of_nodes ++;
 
             if(handle_message(register_message) == GAME_STATE_REGISTER && !is_registered(node_addr,nodes_to_connect)){
-                register_nodes[num_of_nodes] = node_addr;
+                nodes[num_of_nodes] = node_addr;
                 num_of_nodes ++;
                 printf("Node  %d/%d connected: %s\n\r",num_of_nodes,nodes_to_connect,inet_ntoa(node_addr.sin_addr));
             }
