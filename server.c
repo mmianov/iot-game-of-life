@@ -171,7 +171,7 @@ void visualise_2Darray(int *array,int rows, int cols){
                 printf(" ");
             }
             else{
-                printf("*");
+                printf(" * ");
             }
 
         }
