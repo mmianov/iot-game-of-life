@@ -63,6 +63,7 @@ int receive_data(char *message,struct sockaddr_in *node_addr){
     //struct sockaddr_in node_addr;
 
     // receive incoming data
+    printf("receive_data() function");
     int received_data = recvfrom(server_socket, message, MAX_MSG_SIZE, 0, (struct sockaddr*)&node_addr, &addr_len);
     if(received_data > 0) return 1;
     return 0;
