@@ -124,7 +124,6 @@ int open_registration(){
     printf("[*] Node registration is now open ...\n\r");
 
     fd_set read_fds;
-    fd_set write_fds;
 
     for(;;){
         // reset file descriptor sets and add server socket to watch list
@@ -137,9 +136,6 @@ int open_registration(){
             // receive message
             memset(&node_addr,0,sizeof(node_addr));
             node_addr = receive_data(register_message);
-//            nodes[num_of_nodes] = node_addr;
-//            printf("Node number %d connected: %s\n\r",num_of_nodes+1,inet_ntoa(node_addr.sin_addr));
-//            num_of_nodes ++;
 
             if(handle_message(register_message) == GAME_STATE_REGISTER && !is_registered(node_addr,nodes_to_connect)){
                 nodes[num_of_nodes] = node_addr;
