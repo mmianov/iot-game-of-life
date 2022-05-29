@@ -98,7 +98,7 @@ int handle_message(char *message){
 int is_registered(struct sockaddr_in node, int nodes_to_connect){
     for(int i=0;i<nodes_to_connect;i++){
         // check if node IP address is already in possible_nodes set
-        if(node.sin_addr == register_nodes[i].sin_addr){
+        if(node.sin_addr.s_addr == register_nodes[i].sin_addr.s_addr){
             return 1;
         }
     }
