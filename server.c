@@ -17,7 +17,7 @@
 #define MAX_NODES 8
 #define GAME_STATE_REGISTER 1
 #define NODE_AREA_UPDATE 2
-
+#define GAME_STATE_REGISTER_CONFIRM 0<<0 | 0<<1 | 0<<2 | 1<<3
 
 int server_socket;
 
@@ -140,7 +140,10 @@ int open_registration(){
             if(handle_message(register_message) == GAME_STATE_REGISTER && !is_registered(node_addr,nodes_to_connect)){
                 nodes[num_of_nodes] = node_addr;
                 num_of_nodes ++;
-                printf("Node  %d/%d connected: %s\n\r",num_of_nodes,nodes_to_connect,inet_ntoa(node_addr.sin_addr));
+                printf("Node %d/%d connected: %s\n\r",num_of_nodes,nodes_to_connect,inet_ntoa(node_addr.sin_addr));
+                memset(&register_message,0,sizeof(register_message));
+                register_message[0] = GAME_STATE_REGISTER_CONFIRM;
+                sendto(server_socket, register_message, strlen(register_message), 0, (struct sockaddr *)&node_addr, addr_len);
             }
         }
             if(num_of_nodes >=nodes_to_connect){
