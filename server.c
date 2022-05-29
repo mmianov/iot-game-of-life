@@ -132,7 +132,7 @@ int server_register_nodes(){
         // reset file descriptor sets and add server socket to watch list
         FD_ZERO(&read_fds);
         FD_SET(server_socket,&read_fds);
-        select(server_socket+1, &read_fds, &write_fds;, NULL,NULL);
+        select(server_socket+1, &read_fds, &write_fds, NULL,NULL);
 
         // check for new connection to server
         if(FD_ISSET(server_socket, &read_fds)) {
