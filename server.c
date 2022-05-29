@@ -61,7 +61,7 @@ struct sockaddr_in receive_data(char *message){
     // clear buffer
     memset(message, 0, sizeof(message));
     // receive incoming data
-    printf("receive_data() function\n");
+    //printf("receive_data() function\n");
     int received_data = recvfrom(server_socket, message, MAX_MSG_SIZE, 0, (struct sockaddr*)&node_addr, &addr_len);
     return node_addr;
 }
@@ -85,7 +85,7 @@ int handle_message(char *message){
    int fourth_bit = (message[0] >> 3) & 1;
 
    if (first_bit == 0 && second_bit == 0 && third_bit == 0 && fourth_bit == 1){
-        printf("Debug: received register message\n");
+        //printf("Debug: received register message\n");
         return GAME_STATE_REGISTER;
    }
    else if (first_bit == 1 && second_bit == 0 && third_bit == 1 && fourth_bit== 1){
@@ -102,7 +102,7 @@ int is_registered(struct sockaddr_in node, int nodes_to_connect){
             return 1;
         }
     }
-    printf("Debug: node is not registered!\n");
+    //printf("Debug: node is not registered!\n");
     return 0;
 }
 
