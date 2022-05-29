@@ -183,8 +183,9 @@ void compute_game_of_life(int *array,int rows, int cols){
 
     // create a 2D array to hold new generation values and initialize it to initial array state
     int new_arr[rows][cols];
-    memcpy(new_arr,*array,rows*cols*sizeof(int));
-
+    memcpy(new_arr,(int*)array,rows*cols*sizeof(int));
+    printf("New array:\n");
+    visualise_2Darray((int*)new_arr,rows,cols);
 
 //    for(int i =0;i<rows;i++){
 //        for(int j=0;j<cols;j++){
@@ -201,6 +202,7 @@ int main(){
     int new_arr[rows][cols];
     memset(new_arr,0,rows*cols*sizeof(int));
     fill2DArray((int*)new_arr,rows,cols);
+    printf("Original array: \n");
     visualise_2Darray((int*)new_arr,rows,cols);
     compute_game_of_life((int*)new_arr,rows,cols);
     //initialize_server(&server_socket, SERVER_PORT);
