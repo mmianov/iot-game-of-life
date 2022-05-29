@@ -14,12 +14,14 @@
 
 #define SERVER_PORT 17210
 #define MAX_MSG_SIZE 50
-#define MAX_NODES 5
+#define GAME_STATE_REGISTER 1
+#define NODE_AREA_UPDATE 2
+
 
 int server_socket;
 
 struct sockaddr_in node_addr;
-struct sockaddr_in nodes[MAX_NODES];
+struct sockaddr_in register_nodes[MAX_NODES];
 int addr_len = sizeof(struct sockaddr_in);
 
 char received_message[MAX_MSG_SIZE];
@@ -65,47 +67,85 @@ struct sockaddr_in receive_data(char *message){
     return node_addr;
 }
 
+
+int handle_node_area_update(){
+    printf("handle node area udpate");
+}
+
+int handle_boundary_update(){
+    printf("handle boundary udpate");
+}
+
+void handle_message(char message){
+}
+   // TODO : Maybe change to only 2 first bits and payload?
+   // check codename and argument bits
+   int first_bit = (message[0] >> 0) & 1;
+   int second_bit = (message[0] >> 1) & 1;
+   int third_bit = (message[0] >> 2) & 1;
+   int fourth_bit = (message[0] >> 3) & 1;
+
+   if (first_bit == 0 && second_bit == 0 && third_bit == 0 && fourth_bit == 1{
+        return GAME_STATE_REGISTER;
+   }
+   else if (first_bit == 1 && second_bit == 0 && third_bit == 1 && fourth_bit== 1){
+        return GAME_STATE_REGISTER;
+   }
+   else return -1;
+}
+
+int is_registered(struct sockaddr_in node, int nodes_to_connect){
+    for(int i=0;i<nodes_to_connect;i++){
+        // check if node IP address is already in possible_nodes set
+        if(node.sin_addr == register_nodes[i].sin_addr){
+            return 1;
+        }
+    }
+
+    return 0;
+
+}
+
 // clears message buffer
 void clear_msg_buffer(char *message){
     memset(message, 0, sizeof(message));
 }
 
 // opens registration for nodes
-int open_registration(){
+int register_nodes(){
     int num_of_nodes = 0;
-    int max_nodes;
+    int nodes_to_connect;
     printf("Please specify number of nodes to connect: ");
-    scanf("%d",&max_nodes);
-
+    scanf("%d",&nodes_to_connect);
+    if(nodes_to_connect > MAX_NODES){
+        printf("Server can connect up to %d nodes!",MAX_NODES);
+        return 0;
+    }
     printf("[*] Node registration is now open ...\n\r");
 
     fd_set read_fds;
     fd_set write_fds;
 
-    struct timeval timeout;
-    timeout.tv_sec = 0;
-    timeout.tv_usec =500;
-
     for(;;){
         // reset file descriptor sets and add server socket to watch list
         FD_ZERO(&read_fds);
         FD_SET(server_socket,&read_fds);
-        // wait for server socket fds to accept new connection or wait for keyboard input
         select(server_socket+1, &read_fds, NULL, NULL, NULL);
 
         // check for new connection to server
-            if(FD_ISSET(server_socket, &read_fds)) {
-               // receive message and save node address to node_addr
-                memset(&node_addr,0,sizeof(node_addr));
-                node_addr = receive_data(register_message);
-                //recvfrom(server_socket, register_message, MAX_MSG_SIZE, 0, (struct sockaddr*)&node_addr, &addr_len);
-                nodes[num_of_nodes] = node_addr;
-                printf("Node number %d connected: %s\n\r",num_of_nodes+1,inet_ntoa(node_addr.sin_addr));
-                num_of_nodes ++;
-                }
+        if(FD_ISSET(server_socket, &read_fds)) {
+            // receive message
+            memset(&node_addr,0,sizeof(node_addr));
+            node_addr = receive_data(register_message);
 
-            if(num_of_nodes >=max_nodes){
-                printf("[*]Maximum node amount reached!\n\r");
+            if(handle_message(register_message) == GAME_STATE_REGISTER && !is_registered(node_addr,nodes_to_connect)){
+                register_nodes[num_of_nodes] = node_addr;
+                num_of_nodes ++;
+                printf("Node  %d/%d connected: %s\n\r",num_of_nodes,nodes_to_connect,inet_ntoa(node_addr.sin_addr));
+            }
+        }
+            if(num_of_nodes >=nodes_to_connect){
+                printf("[*]All nodes connected! Closing registration ...\n\r");
                 break;
             }
     }
@@ -115,7 +155,7 @@ int open_registration(){
 
 int main(){
     initialize_server(&server_socket, SERVER_PORT);
-    open_registration();
+    register_nodes();
 //   for(;;){
 //     receive_data(received_message);
 //     printf("Received message: %s",received_message);
