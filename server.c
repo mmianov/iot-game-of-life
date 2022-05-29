@@ -62,12 +62,7 @@ struct sockaddr_in receive_data(char *message){
     // receive incoming data
     int received_data = recvfrom(server_socket, message, MAX_MSG_SIZE, 0, (struct sockaddr*)&node_addr, &addr_len);
     // return node struct
-    if (received_data > 0){
-	    return node_addr;
-    }
-    else{
-        return -1; 
-    }
+    return node_addr;
 }
 
 // clears message buffer
@@ -78,8 +73,9 @@ void clear_msg_buffer(char *message){
 // opens registration for nodes
 int open_registration(){
     int num_of_nodes = 0;
+    int max_nodes;
     printf("Please specify number of nodes to connect: ");
-    scanf("%d",&num_of_nodes);
+    scanf("%d",&max_nodes);
 
     printf("[*] Node registration is now open ...\n\r");
 
@@ -108,7 +104,7 @@ int open_registration(){
                 num_of_nodes ++;
                 }
 
-            if(num_of_nodes >=MAX_NODES){
+            if(num_of_nodes >=max_nodes){
                 printf("[*]Maximum node amount reached!\n\r");
                 break;
             }
