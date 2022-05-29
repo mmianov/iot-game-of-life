@@ -81,10 +81,10 @@ int handle_message(char *message){
 
    // TODO : Maybe change to only 2 first bits and payload?
    // check codename and argument bits
-   int first_bit = (*message[0] >> 0) & 1;
-   int second_bit = (*message[0] >> 1) & 1;
-   int third_bit = (*message[0] >> 2) & 1;
-   int fourth_bit = (*message[0] >> 3) & 1;
+   int first_bit = (message[0] >> 0) & 1;
+   int second_bit = (message[0] >> 1) & 1;
+   int third_bit = (message[0] >> 2) & 1;
+   int fourth_bit = (message[0] >> 3) & 1;
 
    if (first_bit == 0 && second_bit == 0 && third_bit == 0 && fourth_bit == 1){
         printf("Debug: received register message");
