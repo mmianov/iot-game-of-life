@@ -137,7 +137,7 @@ int server_register_nodes(){
         if(FD_ISSET(server_socket, &read_fds)) {
             // receive message
             memset(&node_addr,0,sizeof(node_addr));
-            receive_data(&register_message,&node_addr);
+            receive_data(register_message,&node_addr);
             printf("Debug: new message received");
             if(handle_message(register_message) == GAME_STATE_REGISTER && !is_registered(node_addr,nodes_to_connect)){
                 register_nodes[num_of_nodes] = node_addr;
