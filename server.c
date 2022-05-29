@@ -155,21 +155,19 @@ int open_registration(){
     return 1;
 }
 
-int** create2DArray(int rows, int cols){
+void fill2DArray(int *array,int rows, int cols){
 
-    int array[rows][cols] = {0};
     for(int i =0;i<rows;i++){
         for(int j=0;j<cols;j++){
-            array[i][j] = rand() % 2;
+            *((array+i*rows)+j) = rand() % 2;
         }
     }
-   return array;
 }
 
-void visualise_array(int **array,int rows, int cols){
+void visualise_2Darray(int *array,int rows, int cols){
     for(int i =0;i<rows;i++){
         for(int j=0;j<cols;j++){
-            printf("%d ",array[i][j]);
+            printf("%d ",*((array + i*rows)+j));
         }
         printf("\n");
     }
@@ -177,7 +175,12 @@ void visualise_array(int **array,int rows, int cols){
 
 
 int main(){
-
+    int rows = 6;
+    int cols = 10;
+    int new_arr[rows][cols];
+    memset(new_arr,0,rows*cols*sizeof(int));
+    fill2DArray((int*)new_arr,rows,cols);
+    visualise_2Darray((int*)new_arr,rows,cols);
     //initialize_server(&server_socket, SERVER_PORT);
     //open_registration();
 //   for(;;){
