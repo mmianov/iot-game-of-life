@@ -106,16 +106,16 @@ int open_registration(){
                     memset(&node_addr, 0, sizeof(node_addr));
                 }
             // check for user input to stop registration
-            if(FD_ISSET(STDIN_FILENO, &write_fds)){
-                char user_input[4];
-                read(STDIN_FILENO, user_input, sizeof(user_input));
-                printf("Wpisano: %s\r",user_input);
-                if(!strcmp(user_input,"stop")){
-                    printf("[*]Node registration finished\r");
-                    break;
-                }
-		memset(&user_input,0,sizeof(user_input));
-            }
+//            if(FD_ISSET(STDIN_FILENO, &write_fds)){
+//                char user_input[4];
+//                read(STDIN_FILENO, user_input, sizeof(user_input));
+//                printf("Wpisano: %s\r",user_input);
+//                if(!strcmp(user_input,"stop")){
+//                    printf("[*]Node registration finished\r");
+//                    break;
+//                }
+//		        memset(&user_input,0,sizeof(user_input));
+//            }
 
             if(num_of_nodes >=MAX_NODES){
                 printf("[*]Maximum node amount reached!\n\r");
