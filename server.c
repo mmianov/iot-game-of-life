@@ -184,15 +184,21 @@ void compute_game_of_life(int *array,int rows, int cols){
     // create a 2D array to hold new generation values and initialize it to initial array state
     int new_arr[rows][cols];
     memcpy(new_arr,(int*)array,rows*cols*sizeof(int));
-    printf("New array:\n");
-    visualise_2Darray((int*)new_arr,rows,cols);
 
-//    for(int i =0;i<rows;i++){
-//        for(int j=0;j<cols;j++){
-//            ///
-//        }
-//    }
+}
 
+int countNeighbours(int *array,int x, int y){
+    int sum = 0;
+
+    for(int i =-1;i<2;i++){
+        for(int j=-1;j<2;j++){
+            // count live neighbours
+            //sum = sum + *((array + x*rows+i*rows)+y+j);
+            sum = sum + *((array + rows*(x+i))+y+j);
+        }
+    }
+    sum = sum - *((array + x*rows)+y);
+    return sum;
 }
 
 
@@ -204,7 +210,10 @@ int main(){
     fill2DArray((int*)new_arr,rows,cols);
     printf("Original array: \n");
     visualise_2Darray((int*)new_arr,rows,cols);
-    compute_game_of_life((int*)new_arr,rows,cols);
+    int x = 2;
+    int y= 1;
+    printf("Ilość sąsiadów dla (%d,%d): %d",x,y,countNeighbours((int*)new_arr,rows,cols));
+    //compute_game_of_life((int*)new_arr,rows,cols);
     //initialize_server(&server_socket, SERVER_PORT);
     //open_registration();
 //   for(;;){
