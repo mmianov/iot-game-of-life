@@ -155,16 +155,38 @@ int open_registration(){
     return 1;
 }
 
+int** create2DArray(int rows, int cols){
+
+    int array[rows][cols] = {0};
+    for(int i =0;i<rows;i++){
+        for(int j=0;j<cols;j++){
+            array[i][j] = rand() % 2;
+        }
+    }
+   return array;
+}
+
+void visualise_array(int **array,int rows, int cols){
+    for(int i =0;i<rows;i++){
+        for(int j=0;j<cols;j++){
+            printf("%d ",array[i][j]);
+        }
+        printf("\n");
+    }
+}
+
+
 int main(){
-    initialize_server(&server_socket, SERVER_PORT);
-    open_registration();
+
+    //initialize_server(&server_socket, SERVER_PORT);
+    //open_registration();
 //   for(;;){
 //     receive_data(received_message);
 //     printf("Received message: %s",received_message);
 //
 //    }
     //printf("%s",inet_ntoa(nodes[0].sin_addr));
-    close(server_socket);
+    //close(server_socket);
 
 
 }
