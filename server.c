@@ -57,7 +57,7 @@ int initialize_server(int *server_socket,int port){
 }
 
 // receives data on server socket
-int receive_data(char *message,struct sockaddr_in *node_addr){
+int receive_data(char *message){
     // clear buffer
     memset(message, 0, sizeof(message));
     //struct sockaddr_in node_addr;
@@ -138,7 +138,8 @@ int server_register_nodes(){
         if(FD_ISSET(server_socket, &read_fds)) {
             // receive message
             memset(&node_addr,0,sizeof(node_addr));
-            recvfrom(server_socket, register_message, MAX_MSG_SIZE, 0, (struct sockaddr*)&node_addr, &addr_len);
+            receive_data(register_message);
+            //recvfrom(server_socket, register_message, MAX_MSG_SIZE, 0, (struct sockaddr*)&node_addr, &addr_len);
             printf("Debug: new message received");
 //            if(handle_message(register_message) == GAME_STATE_REGISTER && !is_registered(node_addr,nodes_to_connect)){
 //                register_nodes[num_of_nodes] = node_addr;
