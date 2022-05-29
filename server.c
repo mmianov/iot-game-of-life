@@ -167,7 +167,13 @@ void fill2DArray(int *array,int rows, int cols){
 void visualise_2Darray(int *array,int rows, int cols){
     for(int i =0;i<rows;i++){
         for(int j=0;j<cols;j++){
-            printf("%d ",*((array + i*rows)+j));
+            if(*((array + i*rows)+j) == 0){
+                printf(" ");
+            }
+            else{
+                printf("*");
+            }
+
         }
         printf("\n");
     }
