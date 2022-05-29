@@ -156,7 +156,7 @@ int open_registration(){
 }
 
 void fill2DArray(int *array,int rows, int cols){
-
+    srand(time(0));
     for(int i =0;i<rows;i++){
         for(int j=0;j<cols;j++){
             *((array+i*rows)+j) = rand() % 2;
