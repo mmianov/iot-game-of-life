@@ -114,15 +114,14 @@ int open_registration(){
                     printf("[*]Node registration finished\r");
                     break;
                 }
-		//memset(&user_input,0,sizeof(user_input));
+		        //memset(&user_input,0,sizeof(user_input));
             }
-        }
 
-        if(num_of_nodes >=MAX_NODES){
+            if(num_of_nodes >=MAX_NODES){
                 printf("[*]Maximum node amount reached!\n\r");
                 break;
-  }
-}
+            }
+    }
 
     return 1;
 }
