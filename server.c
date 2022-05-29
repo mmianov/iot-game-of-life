@@ -14,6 +14,7 @@
 
 #define SERVER_PORT 17210
 #define MAX_MSG_SIZE 50
+#define MAX_NODES 8
 #define GAME_STATE_REGISTER 1
 #define NODE_AREA_UPDATE 2
 
@@ -76,7 +77,7 @@ int handle_boundary_update(){
     printf("handle boundary udpate");
 }
 
-void handle_message(char message){
+int handle_message(char message){
 }
    // TODO : Maybe change to only 2 first bits and payload?
    // check codename and argument bits
@@ -85,7 +86,7 @@ void handle_message(char message){
    int third_bit = (message[0] >> 2) & 1;
    int fourth_bit = (message[0] >> 3) & 1;
 
-   if (first_bit == 0 && second_bit == 0 && third_bit == 0 && fourth_bit == 1{
+   if (first_bit == 0 && second_bit == 0 && third_bit == 0 && fourth_bit == 1){
         return GAME_STATE_REGISTER;
    }
    else if (first_bit == 1 && second_bit == 0 && third_bit == 1 && fourth_bit== 1){
