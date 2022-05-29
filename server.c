@@ -203,14 +203,14 @@ int countNeighbours(int *array,int rows, int x, int y){
 
 
 int main(){
-    int rows = 3;
+    int rows = 5;
     int cols = 5;
     int new_arr[rows][cols];
     memset(new_arr,0,rows*cols*sizeof(int));
     fill2DArray((int*)new_arr,rows,cols);
     printf("Original array: \n");
     visualise_2Darray((int*)new_arr,rows,cols);
-    int x = 2;
+    int x = 1;
     int y= 1;
     printf("Ilość sąsiadów dla (%d,%d): %d\n",x,y,countNeighbours((int*)new_arr,rows,x,y));
     //compute_game_of_life((int*)new_arr,rows,cols);
