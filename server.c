@@ -203,8 +203,8 @@ int countNeighbours(int *array,int rows, int x, int y){
 
 
 int main(){
-    int rows = 6;
-    int cols = 10;
+    int rows = 3;
+    int cols = 5;
     int new_arr[rows][cols];
     memset(new_arr,0,rows*cols*sizeof(int));
     fill2DArray((int*)new_arr,rows,cols);
