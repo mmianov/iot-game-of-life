@@ -140,11 +140,11 @@ int server_register_nodes(){
             memset(&node_addr,0,sizeof(node_addr));
             recvfrom(server_socket, register_message, MAX_MSG_SIZE, 0, (struct sockaddr*)&node_addr, &addr_len);
             printf("Debug: new message received");
-            if(handle_message(register_message) == GAME_STATE_REGISTER && !is_registered(node_addr,nodes_to_connect)){
-                register_nodes[num_of_nodes] = node_addr;
-                num_of_nodes ++;
-                printf("Node  %d/%d connected: %s\n\r",num_of_nodes,nodes_to_connect,inet_ntoa(node_addr.sin_addr));
-            }
+//            if(handle_message(register_message) == GAME_STATE_REGISTER && !is_registered(node_addr,nodes_to_connect)){
+//                register_nodes[num_of_nodes] = node_addr;
+//                num_of_nodes ++;
+//                printf("Node  %d/%d connected: %s\n\r",num_of_nodes,nodes_to_connect,inet_ntoa(node_addr.sin_addr));
+//            }
         }
             if(num_of_nodes >=nodes_to_connect){
                 printf("[*]All nodes connected! Closing registration ...\n\r");
