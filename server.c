@@ -14,9 +14,19 @@
 
 #define SERVER_PORT 17210
 #define MAX_MSG_SIZE 50
+#define MAX_NODES 8
+#define GAME_STATE_REGISTER 1
+#define NODE_AREA_UPDATE 2
+#define GAME_STATE_REGISTER_CONFIRM 0<<0 | 0<<1 | 0<<2 | 1<<3
 
 int server_socket;
-int node_addr_len = sizeof(struct sockaddr_in);
+
+struct sockaddr_in node_addr;
+struct sockaddr_in nodes[MAX_NODES];
+int addr_len = sizeof(struct sockaddr_in);
+
+char received_message[MAX_MSG_SIZE];
+char register_message[MAX_MSG_SIZE];
 
 // initializes UDP server
 int initialize_server(int *server_socket,int port){
@@ -47,32 +57,114 @@ int initialize_server(int *server_socket,int port){
 }
 
 // receives data on server socket
-int receive_data(char *message){
+struct sockaddr_in receive_data(char *message){
+    // clear buffer
     memset(message, 0, sizeof(message));
-    struct sockaddr_in node_addr;
-
     // receive incoming data
-    int received_data = recvfrom(server_socket, message, MAX_MSG_SIZE, 0, (struct sockaddr*)&node_addr, &node_addr_len);
-    if (received_data > 0){
-	return 1;
+    //printf("receive_data() function\n");
+    int received_data = recvfrom(server_socket, message, MAX_MSG_SIZE, 0, (struct sockaddr*)&node_addr, &addr_len);
+    return node_addr;
+}
+
+
+int handle_node_area_update(){
+    printf("handle node area udpate");
+}
+
+int handle_boundary_update(){
+    printf("handle boundary udpate");
+}
+
+int handle_message(char *message){
+
+   // TODO : Maybe change to only 2 first bits and payload?
+   // check codename and argument bits
+   int first_bit = (message[0] >> 0) & 1;
+   int second_bit = (message[0] >> 1) & 1;
+   int third_bit = (message[0] >> 2) & 1;
+   int fourth_bit = (message[0] >> 3) & 1;
+
+   if (first_bit == 0 && second_bit == 0 && third_bit == 0 && fourth_bit == 1){
+        //printf("Debug: received register message\n");
+        return GAME_STATE_REGISTER;
+   }
+   else if (first_bit == 1 && second_bit == 0 && third_bit == 1 && fourth_bit== 1){
+        return NODE_AREA_UPDATE;
+   }
+   else return -1;
+}
+
+int is_registered(struct sockaddr_in node, int nodes_to_connect){
+    for(int i=0;i<nodes_to_connect;i++){
+        // check if node IP address is already in possible_nodes set
+        if(node.sin_addr.s_addr == nodes[i].sin_addr.s_addr){
+            printf("Debug: node %s already registered!\n",inet_ntoa(node.sin_addr));
+            return 1;
+        }
     }
-    else{
-        return -1; 
+    //printf("Debug: node is not registered!\n");
+    return 0;
+}
+
+// clears message buffer
+void clear_msg_buffer(char *message){
+    memset(message, 0, sizeof(message));
+}
+
+// opens registration for nodes
+int open_registration(){
+    int num_of_nodes = 0;
+    int nodes_to_connect;
+    printf("Please specify number of nodes to connect: ");
+    scanf("%d",&nodes_to_connect);
+    if(nodes_to_connect > MAX_NODES){
+        printf("Server can connect up to %d nodes!\n",MAX_NODES);
+        return 0;
     }
+    printf("[*] Node registration is now open ...\n\r");
+
+    fd_set read_fds;
+
+    for(;;){
+        // reset file descriptor sets and add server socket to watch list
+        FD_ZERO(&read_fds);
+        FD_SET(server_socket,&read_fds);
+        select(server_socket+1, &read_fds, NULL, NULL,NULL);
+
+        // check for new connection to server
+        if(FD_ISSET(server_socket, &read_fds)) {
+            // receive message
+            memset(&node_addr,0,sizeof(node_addr));
+            node_addr = receive_data(register_message);
+
+            if(handle_message(register_message) == GAME_STATE_REGISTER && !is_registered(node_addr,nodes_to_connect)){
+                nodes[num_of_nodes] = node_addr;
+                num_of_nodes ++;
+                printf("Node %d/%d connected: %s\n\r",num_of_nodes,nodes_to_connect,inet_ntoa(node_addr.sin_addr));
+                memset(&register_message,0,sizeof(register_message));
+                register_message[0] = GAME_STATE_REGISTER_CONFIRM;
+                sendto(server_socket, register_message, strlen(register_message), 0, (struct sockaddr *)&node_addr, addr_len);
+            }
+        }
+            if(num_of_nodes >=nodes_to_connect){
+                printf("[*]All nodes connected! Closing registration ...\n\r");
+                break;
+            }
+    }
+
+    return 1;
 }
 
 int main(){
     initialize_server(&server_socket, SERVER_PORT);
-    printf("Przed while\n");
-
-
-   for(;;){
-     char received_message[MAX_MSG_SIZE];
-     struct sockaddr_in node_addr;
-     receive_data(received_message);  
-     printf("Received message: %s",received_message);
-    
-    }
+    open_registration();
+//   for(;;){
+//     receive_data(received_message);
+//     printf("Received message: %s",received_message);
+//
+//    }
+    //printf("%s",inet_ntoa(nodes[0].sin_addr));
+    close(server_socket);
 
 
 }
