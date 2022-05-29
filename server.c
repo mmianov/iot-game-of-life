@@ -187,7 +187,7 @@ void compute_game_of_life(int *array,int rows, int cols){
 
 }
 
-int countNeighbours(int *array,int x, int y){
+int countNeighbours(int *array,int rows, int x, int y){
     int sum = 0;
 
     for(int i =-1;i<2;i++){
@@ -212,7 +212,7 @@ int main(){
     visualise_2Darray((int*)new_arr,rows,cols);
     int x = 2;
     int y= 1;
-    printf("Ilość sąsiadów dla (%d,%d): %d",x,y,countNeighbours((int*)new_arr,rows,cols));
+    printf("Ilość sąsiadów dla (%d,%d): %d",x,y,countNeighbours((int*)new_arr,rows,x,y,));
     //compute_game_of_life((int*)new_arr,rows,cols);
     //initialize_server(&server_socket, SERVER_PORT);
     //open_registration();
