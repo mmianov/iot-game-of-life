@@ -96,8 +96,7 @@ int open_registration(){
         select(server_socket+1, &read_fds, &write_fds, NULL, NULL); // no timeout
 
         // check for new connection to server
-	    for(int i=0;i<FD_SETSIZE;i++){
-            if(FD_ISSET(i, &read_fds) && i == server_socket) {
+            if(FD_ISSET(server_socket, &read_fds)) {
                     // receive message and save node address to node_addr
                     recvfrom(server_socket, register_message, MAX_MSG_SIZE, 0, (struct sockaddr*)&node_addr, &addr_len);
                     nodes[num_of_nodes] = node_addr;
@@ -110,21 +109,21 @@ int open_registration(){
             if(FD_ISSET(STDIN_FILENO, &write_fds)){
                 char user_input[4];
                 read(STDIN_FILENO, user_input, sizeof(user_input));
-            printf("Wpisano: %s\r",user_input);
+                printf("Wpisano: %s\r",user_input);
                 if(!strcmp(user_input,"stop")){
                     printf("[*]Node registration finished\r");
                     break;
                 }
+		//memset(&user_input,0,sizeof(user_input));
             }
         }
 
         if(num_of_nodes >=MAX_NODES){
                 printf("[*]Maximum node amount reached!\n\r");
                 break;
-            }
+  }
+}
 
-
-      }
     return 1;
 }
 
