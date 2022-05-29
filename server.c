@@ -77,8 +77,8 @@ int handle_boundary_update(){
     printf("handle boundary udpate");
 }
 
-int handle_message(char message){
-}
+int handle_message(char *message){
+
    // TODO : Maybe change to only 2 first bits and payload?
    // check codename and argument bits
    int first_bit = (message[0] >> 0) & 1;
@@ -113,7 +113,7 @@ void clear_msg_buffer(char *message){
 }
 
 // opens registration for nodes
-int register_nodes(){
+int server_register_nodes(){
     int num_of_nodes = 0;
     int nodes_to_connect;
     printf("Please specify number of nodes to connect: ");
@@ -156,7 +156,7 @@ int register_nodes(){
 
 int main(){
     initialize_server(&server_socket, SERVER_PORT);
-    register_nodes();
+    server_register_nodes();
 //   for(;;){
 //     receive_data(received_message);
 //     printf("Received message: %s",received_message);
