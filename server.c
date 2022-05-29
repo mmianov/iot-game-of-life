@@ -126,13 +126,13 @@ int server_register_nodes(){
     printf("[*] Node registration is now open ...\n\r");
 
     fd_set read_fds;
-    //fd_set write_fds;
+    fd_set write_fds;
 
     for(;;){
         // reset file descriptor sets and add server socket to watch list
         FD_ZERO(&read_fds);
         FD_SET(server_socket,&read_fds);
-        select(server_socket+1, &read_fds, NULL, NULL,NULL);
+        select(server_socket+1, &read_fds, &write_fds;, NULL,NULL);
 
         // check for new connection to server
         if(FD_ISSET(server_socket, &read_fds)) {
