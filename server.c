@@ -22,7 +22,7 @@
 int server_socket;
 
 struct sockaddr_in node_addr;
-struct sockaddr_in register_nodes[MAX_NODES];
+struct sockaddr_in nodes[MAX_NODES];
 int addr_len = sizeof(struct sockaddr_in);
 
 char received_message[MAX_MSG_SIZE];
@@ -57,16 +57,13 @@ int initialize_server(int *server_socket,int port){
 }
 
 // receives data on server socket
-int receive_data(char *message){
+struct sockaddr_in receive_data(char *message){
     // clear buffer
     memset(message, 0, sizeof(message));
-    //struct sockaddr_in node_addr;
-
     // receive incoming data
     printf("receive_data() function");
     int received_data = recvfrom(server_socket, message, MAX_MSG_SIZE, 0, (struct sockaddr*)&node_addr, &addr_len);
-    if(received_data > 0) return 1;
-    return 0;
+    return node_addr;
 }
 
 
@@ -114,7 +111,7 @@ void clear_msg_buffer(char *message){
 }
 
 // opens registration for nodes
-int server_register_nodes(){
+int open_registration(){
     int num_of_nodes = 0;
     int nodes_to_connect;
     printf("Please specify number of nodes to connect: ");
@@ -132,15 +129,18 @@ int server_register_nodes(){
         // reset file descriptor sets and add server socket to watch list
         FD_ZERO(&read_fds);
         FD_SET(server_socket,&read_fds);
-        select(server_socket+1, &read_fds, &write_fds, NULL,NULL);
+        select(server_socket+1, &read_fds, NULL, NULL,NULL);
 
         // check for new connection to server
         if(FD_ISSET(server_socket, &read_fds)) {
             // receive message
             memset(&node_addr,0,sizeof(node_addr));
-            receive_data(register_message);
+            node_addr = receive_data(register_message);
+            nodes[num_of_nodes] = node_addr;
+            printf("Node number %d connected: %s\n\r",num_of_nodes+1,inet_ntoa(node_addr.sin_addr));
+            num_of_nodes ++;
             //recvfrom(server_socket, register_message, MAX_MSG_SIZE, 0, (struct sockaddr*)&node_addr, &addr_len);
-            printf("Debug: new message received");
+
 //            if(handle_message(register_message) == GAME_STATE_REGISTER && !is_registered(node_addr,nodes_to_connect)){
 //                register_nodes[num_of_nodes] = node_addr;
 //                num_of_nodes ++;
@@ -158,7 +158,7 @@ int server_register_nodes(){
 
 int main(){
     initialize_server(&server_socket, SERVER_PORT);
-    server_register_nodes();
+    open_registration();
 //   for(;;){
 //     receive_data(received_message);
 //     printf("Received message: %s",received_message);
