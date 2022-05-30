@@ -297,6 +297,14 @@ int main(){
     memset(game_nodes,0,sizeof(game_nodes));
     create_game_nodes(game_nodes,game_nodes_amount);
 
+    for(int i=0;i<game_nodes_amount;i++){
+        printf("Node id: %d\n",game_nodes[i].id);
+        printf("Node IP: %s\n",inet_ntoa(game_nodes[i]));
+        // neighbours
+        printf("Cols: %d Rows: %d\n",game_nodes[i].cols,game_nodes[i].rows);
+        printf("Area update status: %d\n",game_nodes[i].sent_area_update);
+    }
+
     close(server_socket);
 
 
