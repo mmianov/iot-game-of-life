@@ -36,8 +36,8 @@ struct game_node{
     int neighbours[MAX_NODES-1]; // neighbouring nodes
     int cols; // columns in game of life 2D array
     int rows; // rows in game of life 2D array
-    bool sent_area_update; // value to see if node has already sent an area update
-}
+    int sent_area_update; // value to see if node has already sent an area update
+};
 
 int game_nodes_amount; // variable to store game nodes
 
@@ -50,7 +50,7 @@ void create_game_nodes(struct *game_node game_nodes, int game_nodes_amount){
         memset(game_nodes[i].neighbours,0,sizeof(game_nodes[i].neighbours));
         game_nodes[i].cols = 0;
         game_nodes[i].rows = 0;
-        game_nodes[i].sent_area_update = false;
+        game_nodes[i].sent_area_update = 0;
     }
 }
 
