@@ -278,41 +278,43 @@ void compute_game_of_life(int *arr,int *new_arr,int rows, int cols){
 
 
 int main(){
-//    int rows = 20;
-//    int cols = 50;
-//    int arr[rows][cols];
-//    memset(arr,0,rows*cols*sizeof(int));
-//    fill2DArray((int*)arr,rows,cols);
-//    //printf("Original array: \n");
-//    visualise_2Darray((int*)arr,rows,cols);
-//    sleep(1);
+    int rows = 40;
+    int cols = 80;
+    int arr[rows][cols];
+    memset(arr,0,rows*cols*sizeof(int));
+    fill2DArray((int*)arr,rows,cols);
+    //printf("Original array: \n");
+    visualise_2Darray((int*)arr,rows,cols);
+    sleep(1);
+
+    int next_gen[rows][cols];
+    memcpy(next_gen,arr,rows*cols*sizeof(int));
+
+    for(;;){
+//        // copy contents of current generation
+//        memcpy(next_gen,arr,rows*cols*sizeof(int));
+        // compute next generation and save in next_gen array
+        compute_game_of_life((int*)arr,(int*)next_gen,rows,cols);
+        visualise_2Darray((int*)next_gen,rows,cols);
+        sleep(1);
+        system("clear");
+        // set next generation to be current generation in next loop
+        memcpy(arr,next_gen,rows*cols*sizeof(int));
+    }
+
+//    // server setup
+//    initialize_server(&server_socket, SERVER_PORT);
+//    open_registration();
 //
-//    int next_gen[rows][cols];
-//    memcpy(next_gen,arr,rows*cols*sizeof(int));
+//    // store game nodes
+//    struct game_node game_nodes[game_nodes_amount];
+//    memset(game_nodes,0,sizeof(game_nodes));
 //
-//    for(;;){
-////        // copy contents of current generation
-////        memcpy(next_gen,arr,rows*cols*sizeof(int));
-//        // compute next generation and save in next_gen array
-//        compute_game_of_life((int*)arr,(int*)next_gen,rows,cols);
-//        visualise_2Darray((int*)next_gen,rows,cols);
-//        sleep(1);
-//        system("clear");
-//        // set next generation to be current generation in next loop
-//        memcpy(arr,next_gen,rows*cols*sizeof(int));
-//    }
-
-
-    initialize_server(&server_socket, SERVER_PORT);
-    open_registration();
-
-    // store game nodes
-    struct game_node game_nodes[game_nodes_amount];
-    memset(game_nodes,0,sizeof(game_nodes));
-    create_game_nodes(game_nodes,game_nodes_amount);
-    display_game_nodes(game_nodes,game_nodes_amount);
-
-    close(server_socket);
+//    // initialize game nodes
+//    create_game_nodes(game_nodes,game_nodes_amount);
+//    display_game_nodes(game_nodes,game_nodes_amount);
+//
+//    close(server_socket);
 
 
 }
