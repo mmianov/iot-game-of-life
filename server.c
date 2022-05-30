@@ -236,8 +236,11 @@ int countNeighbours(int *array,int rows, int cols, int x, int y){
     for(int i =-1;i<2;i++){
         for(int j=-1;j<2;j++){
             // count live neighbours
-            int wrap_cols = (y+j+cols) % cols;
-            int wrap_rows = (x+i+rows) % rows;
+	    //int wrap_cols = (y+j+cols) % cols;
+            //int wrap_rows = (x+i+rows) % rows;
+            // not sure which one to go with yet
+            int wrap_cols = (y+j+cols-1) % (cols-1);
+            int wrap_rows = (x+i+rows-1) % (rows-1);
             //sum = sum + *((array + rows*(x+i))+y+j);
             sum = sum + *((array + rows*wrap_rows)+wrap_cols);
         }
@@ -279,13 +282,14 @@ void compute_game_of_life(int *arr,int *new_arr,int rows, int cols){
 
 int main(){
     int rows = 40;
-    int cols = 80;
+    int cols = 90;
     int arr[rows][cols];
     memset(arr,0,rows*cols*sizeof(int));
     fill2DArray((int*)arr,rows,cols);
     //printf("Original array: \n");
     visualise_2Darray((int*)arr,rows,cols);
     sleep(1);
+    system("clear");
 
     int next_gen[rows][cols];
     memcpy(next_gen,arr,rows*cols*sizeof(int));
