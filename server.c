@@ -298,13 +298,13 @@ int main(){
     create_game_nodes(game_nodes,game_nodes_amount);
 
     for(int i=0;i<game_nodes_amount;i++){
-        printf("---------------------------------\n\r")
+        printf("---------------------------------\n\r");
         printf("Node id: %d\n",game_nodes[i].id);
         printf("Node IP: %s\n",inet_ntoa(game_nodes[i].IP_addr));
         // neighbours
         printf("Cols: %d Rows: %d\n",game_nodes[i].cols,game_nodes[i].rows);
         printf("Area update status: %d\n",game_nodes[i].sent_area_update);
-        printf("---------------------------------\n\r")
+        printf("---------------------------------\n\r");
     }
 
     close(server_socket);
