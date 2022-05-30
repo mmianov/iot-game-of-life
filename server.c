@@ -293,7 +293,7 @@ int main(){
     open_registration();
 
     // store game nodes
-    struct game_nodes[game_nodes_amount];
+    struct game_node game_nodes[game_nodes_amount];
     memset(game_nodes,0,sizeof(game_nodes));
     create_game_nodes(game_nodes,game_nodes_amount);
 
