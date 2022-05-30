@@ -237,11 +237,17 @@ void compute_game_of_life(int *arr,int *new_arr,int rows, int cols){
 int main(){
     int rows = 5;
     int cols = 5;
-    int new_arr[rows][cols];
-    memset(new_arr,0,rows*cols*sizeof(int));
-    fill2DArray((int*)new_arr,rows,cols);
+    int arr[rows][cols];
+    memset(arr,0,rows*cols*sizeof(int));
+    fill2DArray((int*)arr,rows,cols);
     printf("Original array: \n");
-    visualise_2Darray((int*)new_arr,rows,cols);
+    visualise_2Darray((int*)arr,rows,cols);
+    int next_gen[rows][cols];
+    memcpy(next_gen,arr,rows*cols*sizeof(int));
+    compute_game_of_life((int*)arr,(int*)next_gen,rows,cols);
+    printf("Next generation array: \n");
+    visualise_2Darray((int*)next_gen,rows,cols);
+
 
     //compute_game_of_life((int*)new_arr,rows,cols);
     //initialize_server(&server_socket, SERVER_PORT);
