@@ -299,7 +299,7 @@ int main(){
 
     for(int i=0;i<game_nodes_amount;i++){
         printf("Node id: %d\n",game_nodes[i].id);
-        printf("Node IP: %s\n",inet_ntoa(game_nodes[i]));
+        printf("Node IP: %s\n",inet_ntoa(game_nodes[i].IP_addr));
         // neighbours
         printf("Cols: %d Rows: %d\n",game_nodes[i].cols,game_nodes[i].rows);
         printf("Area update status: %d\n",game_nodes[i].sent_area_update);
