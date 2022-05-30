@@ -12,6 +12,7 @@
 #include <time.h>
 #include <sys/time.h>
 
+
 #define SERVER_PORT 17210
 #define MAX_MSG_SIZE 50
 #define MAX_NODES 8
@@ -238,15 +239,25 @@ int main(){
     int rows = 5;
     int cols = 5;
     int arr[rows][cols];
-    memset(arr,0,rows*cols*sizeof(int));
-    fill2DArray((int*)arr,rows,cols);
-    printf("Original array: \n");
-    visualise_2Darray((int*)arr,rows,cols);
-    int next_gen[rows][cols];
-    memcpy(next_gen,arr,rows*cols*sizeof(int));
-    compute_game_of_life((int*)arr,(int*)next_gen,rows,cols);
-    printf("Next generation array: \n");
-    visualise_2Darray((int*)next_gen,rows,cols);
+//    memset(arr,0,rows*cols*sizeof(int));
+//    fill2DArray((int*)arr,rows,cols);
+//    printf("Original array: \n");
+//    visualise_2Darray((int*)arr,rows,cols);
+//    int next_gen[rows][cols];
+//    memcpy(next_gen,arr,rows*cols*sizeof(int));
+//    compute_game_of_life((int*)arr,(int*)next_gen,rows,cols);
+//    printf("Next generation array: \n");
+//    visualise_2Darray((int*)next_gen,rows,cols);
+
+    for(;;){
+        memset(arr,0,rows*cols*sizeof(int));
+        fill2DArray((int*)arr,rows,cols);
+        printf("Original array: \n");
+        visualise_2Darray((int*)arr,rows,cols);
+        system("clear");
+        delay(100);
+
+    }
 
 
     //compute_game_of_life((int*)new_arr,rows,cols);
