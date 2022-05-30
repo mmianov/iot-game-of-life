@@ -255,7 +255,7 @@ int main(){
         printf("Original array: \n");
         visualise_2Darray((int*)arr,rows,cols);
         system("clear");
-        delay(100);
+        sleep(0.1);
 
     }
 
