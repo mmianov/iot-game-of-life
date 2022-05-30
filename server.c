@@ -211,7 +211,7 @@ void compute_game_of_life(int *arr,int *new_arr,int rows, int cols){
             // treat edges differently - no wrap around yet
             if(i==0 || i == rows -1 || j ==0 || j == cols -1){
                 // edges stay in the same state they were selected for all generations
-                memcpy(*((new_arr+i*rows)+j),&state,sizeof(int));
+                memcpy(((new_arr+i*rows)+j),&state,sizeof(int));
             }
             // normal cells (not edges)
             else{
@@ -219,13 +219,13 @@ void compute_game_of_life(int *arr,int *new_arr,int rows, int cols){
                 int neighbours = countNeighbours((int*)arr,rows,i,j);
 
                 if (state == 0 && neighbours == 3){
-                     memcpy(*((new_arr+i*rows)+j),&one,sizeof(int));
+                     memcpy(((new_arr+i*rows)+j),&one,sizeof(int));
                 }
                 else if (state == 1 && (neighbours < 2 || neighbours >3)){
-                    memcpy(*((new_arr+i*rows)+j),&zero,sizeof(int));
+                    memcpy(((new_arr+i*rows)+j),&zero,sizeof(int));
                 }
                 else{
-                    memcpy(*((new_arr+i*rows)+j),&state,sizeof(int));
+                    memcpy(((new_arr+i*rows)+j),&state,sizeof(int));
                 }
             }
         }
