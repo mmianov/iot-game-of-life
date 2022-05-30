@@ -42,7 +42,7 @@ struct game_node{
 int game_nodes_amount; // variable to store game nodes
 
 // creates game nodes
-void create_game_nodes(struct *game_node game_nodes, int game_nodes_amount){
+void create_game_nodes(struct game_node *game_nodes, int game_nodes_amount){
     for(int i=0;i<game_nodes_amount;i++){
         // check struct sockaddr_in nodes[MAX_NODES] and only get registered nodes
         game_nodes[i].id = i+1;
