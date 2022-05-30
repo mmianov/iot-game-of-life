@@ -158,9 +158,19 @@ int open_registration(){
 
 void fill2DArray(int *array,int rows, int cols){
     srand(time(0));
+    int num_of_ones = 0;
+    int num_of_zeros = 0;
     for(int i =0;i<rows;i++){
         for(int j=0;j<cols;j++){
-            *((array+i*rows)+j) = rand() % 2;
+            int rand_val = rand()%2;
+            if(rand_val == 1 && num_of_ones*5 < num_of_zeros){
+                          *((array+i*rows)+j) = rand_val;
+                          num_of_ones++;
+                        }
+            else{
+                 *((array+i*rows)+j) = 0;
+                  num_of_zeros++;
+            }
         }
     }
 }
@@ -180,13 +190,16 @@ void visualise_2Darray(int *array,int rows, int cols){
     }
 }
 
-int countNeighbours(int *array,int rows, int x, int y){
+int countNeighbours(int *array,int rows, int cols, int x, int y){
     int sum = 0;
 
     for(int i =-1;i<2;i++){
         for(int j=-1;j<2;j++){
             // count live neighbours
-            sum = sum + *((array + rows*(x+i))+y+j);
+            int wrap_cols = (y+j+cols) % cols;
+            int wrap_rows = (x+i+rows) % rows;
+            //sum = sum + *((array + rows*(x+i))+y+j);
+            sum = sum + *((array + rows*wrap_rows)+wrap_cols);
         }
     }
     sum = sum - *((array + x*rows)+y);
@@ -210,14 +223,14 @@ void compute_game_of_life(int *arr,int *new_arr,int rows, int cols){
             int zero = 0;
 
             // treat edges differently - no wrap around yet
-            if(i==0 || i == rows -1 || j ==0 || j == cols -1){
+           // if(i==0 || i == rows -1 || j ==0 || j == cols -1){
                 // edges stay in the same state they were selected for all generations
-                memcpy(((new_arr+i*rows)+j),&state,sizeof(int));
-            }
+             //   memcpy(((new_arr+i*rows)+j),&state,sizeof(int));
+           // }
             // normal cells (not edges)
-            else{
+            //else{
                  // count cell neighbours
-                int neighbours = countNeighbours((int*)arr,rows,i,j);
+                int neighbours = countNeighbours((int*)arr,rows,cols,i,j);
 
                 if (state == 0 && neighbours == 3){
                      memcpy(((new_arr+i*rows)+j),&one,sizeof(int));
@@ -228,7 +241,7 @@ void compute_game_of_life(int *arr,int *new_arr,int rows, int cols){
                 else{
                     memcpy(((new_arr+i*rows)+j),&state,sizeof(int));
                 }
-            }
+           // }
         }
     }
 }
@@ -237,7 +250,7 @@ void compute_game_of_life(int *arr,int *new_arr,int rows, int cols){
 
 int main(){
     int rows = 20;
-    int cols = 60;
+    int cols = 50;
     int arr[rows][cols];
     memset(arr,0,rows*cols*sizeof(int));
     fill2DArray((int*)arr,rows,cols);
