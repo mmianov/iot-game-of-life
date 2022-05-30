@@ -239,23 +239,25 @@ int main(){
     int rows = 20;
     int cols = 60;
     int arr[rows][cols];
-//    memset(arr,0,rows*cols*sizeof(int));
-//    fill2DArray((int*)arr,rows,cols);
-//    printf("Original array: \n");
-//    visualise_2Darray((int*)arr,rows,cols);
-//    int next_gen[rows][cols];
-//    memcpy(next_gen,arr,rows*cols*sizeof(int));
-//    compute_game_of_life((int*)arr,(int*)next_gen,rows,cols);
-//    printf("Next generation array: \n");
-//    visualise_2Darray((int*)next_gen,rows,cols);
+    memset(arr,0,rows*cols*sizeof(int));
+    fill2DArray((int*)arr,rows,cols);
+    //printf("Original array: \n");
+    visualise_2Darray((int*)arr,rows,cols);
+    sleep(1);
+
+    int next_gen[rows][cols];
+    memcpy(next_gen,arr,rows*cols*sizeof(int));
 
     for(;;){
-        memset(arr,0,rows*cols*sizeof(int));
-        fill2DArray((int*)arr,rows,cols);
-        visualise_2Darray((int*)arr,rows,cols);
+//        // copy contents of current generation
+//        memcpy(next_gen,arr,rows*cols*sizeof(int));
+        // compute next generation and save in next_gen array
+        compute_game_of_life((int*)arr,(int*)next_gen,rows,cols);
+        visualise_2Darray((int*)next_gen,rows,cols);
         sleep(1);
         system("clear");
-
+        // set next generation to be current generation in next loop
+        memcpy(arr,next_gen,rows*cols*sizeof(int));
     }
 
 
