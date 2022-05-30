@@ -192,9 +192,9 @@ void compute_game_of_life(int *arr,int rows, int cols){
             int state = *((arr+i*rows)+j);
 
             // treat edges differently - no wrap around yet
-            if(i==0 || i == rows -1 || j ==0 or j == cols -1){
+            if(i==0 || i == rows -1 || j ==0 || j == cols -1){
                 // edges stay in the same state they were selected for all generations
-                *((new_arr+i*rows)+j) = state;
+                (int*)new_arr[i][j] = state;
             }
             // normal cells (not edges)
             else{
@@ -202,13 +202,13 @@ void compute_game_of_life(int *arr,int rows, int cols){
                 int neighbours = countNeighbours((int*)arr,rows,i,j);
 
                 if (state == 0 && neighbours == 3){
-                     *((new_arr+i*rows)+j) = 1;
+                     (int*)new_arr[i][j] = 1;
                 }
                 else if (state == 1 && (neighbours < 2 || neighbours >3)){
-                    *((new_arr+i*rows)+j) = 0;
+                    (int*)new_arr[i][j] = 0;
                 }
                 else{
-                    *((new_arr+i*rows)+j) = state;
+                    *(int*)new_arr[i][j] = state;
                 }
             }
 
