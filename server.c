@@ -22,12 +22,37 @@
 
 int server_socket;
 
-struct sockaddr_in node_addr;
-struct sockaddr_in nodes[MAX_NODES];
+struct sockaddr_in node_addr; // variable to perform operations on nodes during registration
+struct sockaddr_in nodes[MAX_NODES]; // variable to hold nodes in registration period
 int addr_len = sizeof(struct sockaddr_in);
 
-char received_message[MAX_MSG_SIZE];
-char register_message[MAX_MSG_SIZE];
+char received_message[MAX_MSG_SIZE]; // received message
+char register_message[MAX_MSG_SIZE]; // register message (to be merge into ALP later on)
+
+// structure to hold information about nodes in the game
+struct game_node{
+    int id; // node identifier
+    struck in_addr IP_addr; // node ip address
+    int neighbours[MAX_NODES-1]; // neighbouring nodes
+    int cols; // columns in game of life 2D array
+    int rows; // rows in game of life 2D array
+    bool sent_area_update; // value to see if node has already sent an area update
+}
+
+int game_nodes_amount; // variable to store game nodes
+
+// creates game nodes
+void create_game_nodes(struct *game_node game_nodes, int game_nodes_amount){
+    for(int i=0;i<game_nodes_amount;i++){
+        // check struct sockaddr_in nodes[MAX_NODES] and only get registered nodes
+        game_nodes[i].id = i+1;
+        game_nodes[i].IP_addr = nodes[i].sin_addr;
+        memset(game_nodes[i].neighbours,0,sizeof(game_nodes[i].neighbours));
+        game_nodes[i].cols = 0;
+        game_nodes[i].rows = 0;
+        game_nodes[i].sent_area_update = false;
+    }
+}
 
 // initializes UDP server
 int initialize_server(int *server_socket,int port){
@@ -79,7 +104,7 @@ int handle_boundary_update(){
 int handle_message(char *message){
 
    // TODO : Maybe change to only 2 first bits and payload?
-   // check codename and argument bits
+   // check codename and argument bits (intentionally verbose, to see the ALP)
    int first_bit = (message[0] >> 0) & 1;
    int second_bit = (message[0] >> 1) & 1;
    int third_bit = (message[0] >> 2) & 1;
@@ -152,7 +177,8 @@ int open_registration(){
                 break;
             }
     }
-
+    // set global variable
+    game_nodes_amount = nodes_to_connect; // todo: maybe change to global variable only?
     return 1;
 }
 
@@ -210,10 +236,6 @@ int countNeighbours(int *array,int rows, int cols, int x, int y){
 
 void compute_game_of_life(int *arr,int *new_arr,int rows, int cols){
 
-    // create a 2D array to hold new generation values and initialize it to initial array state
-    //int new_arr[rows][cols];
-    //memcpy(new_arr,(int*)arr,rows*cols*sizeof(int));
-
     // iterate over array
      for(int i =0;i<rows;i++){
         for(int j=0;j<cols;j++){
@@ -222,26 +244,19 @@ void compute_game_of_life(int *arr,int *new_arr,int rows, int cols){
             int one = 1;
             int zero = 0;
 
-            // treat edges differently - no wrap around yet
-           // if(i==0 || i == rows -1 || j ==0 || j == cols -1){
-                // edges stay in the same state they were selected for all generations
-             //   memcpy(((new_arr+i*rows)+j),&state,sizeof(int));
-           // }
-            // normal cells (not edges)
-            //else{
-                 // count cell neighbours
-                int neighbours = countNeighbours((int*)arr,rows,cols,i,j);
+             // count cell neighbours
+            int neighbours = countNeighbours((int*)arr,rows,cols,i,j);
 
-                if (state == 0 && neighbours == 3){
-                     memcpy(((new_arr+i*rows)+j),&one,sizeof(int));
-                }
-                else if (state == 1 && (neighbours < 2 || neighbours >3)){
-                    memcpy(((new_arr+i*rows)+j),&zero,sizeof(int));
-                }
-                else{
-                    memcpy(((new_arr+i*rows)+j),&state,sizeof(int));
-                }
-           // }
+            if (state == 0 && neighbours == 3){
+                 memcpy(((new_arr+i*rows)+j),&one,sizeof(int));
+            }
+            else if (state == 1 && (neighbours < 2 || neighbours >3)){
+                memcpy(((new_arr+i*rows)+j),&zero,sizeof(int));
+            }
+            else{
+                memcpy(((new_arr+i*rows)+j),&state,sizeof(int));
+            }
+
         }
     }
 }
@@ -274,16 +289,15 @@ int main(){
     }
 
 
-    //compute_game_of_life((int*)new_arr,rows,cols);
-    //initialize_server(&server_socket, SERVER_PORT);
-    //open_registration();
-//   for(;;){
-//     receive_data(received_message);
-//     printf("Received message: %s",received_message);
-//
-//    }
-    //printf("%s",inet_ntoa(nodes[0].sin_addr));
-    //close(server_socket);
+    initialize_server(&server_socket, SERVER_PORT);
+    open_registration();
+
+    // store game nodes
+    struct game_nodes[game_nodes_amount];
+    memset(game_nodes,0,sizeof(game_nodes));
+    create_game_nodes(game_nodes,game_nodes_amount);
+
+    close(server_socket);
 
 
 }
