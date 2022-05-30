@@ -32,7 +32,7 @@ char register_message[MAX_MSG_SIZE]; // register message (to be merge into ALP l
 // structure to hold information about nodes in the game
 struct game_node{
     int id; // node identifier
-    struck in_addr IP_addr; // node ip address
+    struct in_addr IP_addr; // node ip address
     int neighbours[MAX_NODES-1]; // neighbouring nodes
     int cols; // columns in game of life 2D array
     int rows; // rows in game of life 2D array
