@@ -210,8 +210,8 @@ int main(){
     fill2DArray((int*)new_arr,rows,cols);
     printf("Original array: \n");
     visualise_2Darray((int*)new_arr,rows,cols);
-    int x = 1;
-    int y= 1;
+    int x = 2;
+    int y= 2;
     printf("Ilość sąsiadów dla (%d,%d): %d\n",x,y,countNeighbours((int*)new_arr,rows,x,y));
     //compute_game_of_life((int*)new_arr,rows,cols);
     //initialize_server(&server_socket, SERVER_PORT);
