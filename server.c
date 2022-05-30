@@ -194,7 +194,7 @@ int countNeighbours(int *array,int rows, int x, int y){
 
 
 
-void compute_game_of_life(int *arr,int rows, int cols){
+int compute_game_of_life(int *arr,int rows, int cols){
 
     // create a 2D array to hold new generation values and initialize it to initial array state
     int new_arr[rows][cols];
@@ -228,14 +228,9 @@ void compute_game_of_life(int *arr,int rows, int cols){
                     memcpy(*((new_arr+i*rows)+j),&state,sizeof(int));
                 }
             }
-
-
-
-
-
         }
     }
-
+    return new_arr;
 }
 
 
