@@ -41,6 +41,8 @@ struct game_node{
 
 int game_nodes_amount; // variable to store game nodes
 
+// --- GAME NODES FUNCTIONS ---
+
 // creates game nodes
 void create_game_nodes(struct game_node *game_nodes, int game_nodes_amount){
     for(int i=0;i<game_nodes_amount;i++){
@@ -53,6 +55,20 @@ void create_game_nodes(struct game_node *game_nodes, int game_nodes_amount){
         game_nodes[i].sent_area_update = 0;
     }
 }
+
+void display_game_nodes(struct game_node *game_nodes,int game_nodes_amount){
+    for(int i=0;i<game_nodes_amount;i++){
+        printf("---------------------------------\n\r");
+        printf("Node id: %d\n",game_nodes[i].id);
+        printf("Node IP: %s\n",inet_ntoa(game_nodes[i].IP_addr));
+        // neighbours
+        printf("Cols: %d Rows: %d\n",game_nodes[i].cols,game_nodes[i].rows);
+        printf("Area update status: %d\n",game_nodes[i].sent_area_update);
+        printf("---------------------------------\n\r");
+    }
+}
+
+// --- SERVER FUNCTIONS ---
 
 // initializes UDP server
 int initialize_server(int *server_socket,int port){
@@ -132,10 +148,6 @@ int is_registered(struct sockaddr_in node, int nodes_to_connect){
     return 0;
 }
 
-// clears message buffer
-void clear_msg_buffer(char *message){
-    memset(message, 0, sizeof(message));
-}
 
 // opens registration for nodes
 int open_registration(){
@@ -181,6 +193,8 @@ int open_registration(){
     game_nodes_amount = nodes_to_connect; // todo: maybe change to global variable only?
     return 1;
 }
+
+// --- GAME OF LIFE FUNCTIONS ---
 
 void fill2DArray(int *array,int rows, int cols){
     srand(time(0));
@@ -296,16 +310,7 @@ int main(){
     struct game_node game_nodes[game_nodes_amount];
     memset(game_nodes,0,sizeof(game_nodes));
     create_game_nodes(game_nodes,game_nodes_amount);
-
-    for(int i=0;i<game_nodes_amount;i++){
-        printf("---------------------------------\n\r");
-        printf("Node id: %d\n",game_nodes[i].id);
-        printf("Node IP: %s\n",inet_ntoa(game_nodes[i].IP_addr));
-        // neighbours
-        printf("Cols: %d Rows: %d\n",game_nodes[i].cols,game_nodes[i].rows);
-        printf("Area update status: %d\n",game_nodes[i].sent_area_update);
-        printf("---------------------------------\n\r");
-    }
+    display_game_nodes(game_nodes,game_nodes_amount);
 
     close(server_socket);
 
