@@ -179,11 +179,45 @@ void visualise_2Darray(int *array,int rows, int cols){
     }
 }
 
-void compute_game_of_life(int *array,int rows, int cols){
+void compute_game_of_life(int *arr,int rows, int cols){
 
     // create a 2D array to hold new generation values and initialize it to initial array state
     int new_arr[rows][cols];
-    memcpy(new_arr,(int*)array,rows*cols*sizeof(int));
+    memcpy(new_arr,(int*)arr,rows*cols*sizeof(int));
+
+    // iterate over array
+     for(int i =0;i<rows;i++){
+        for(int j=0;j<cols;j++){
+            // get current cell state (state before computing next generation)
+            int state = *((arr+i*rows)+j);
+
+            // treat edges differently - no wrap around yet
+            if(i==0 || i == rows -1 || j ==0 or j == cols -1){
+                // edges stay in the same state they were selected for all generations
+                *((new_arr+i*rows)+j) = state;
+            }
+            // normal cells (not edges)
+            else{
+                 // count cell neighbours
+                int neighbours = countNeighbours((int*)arr,rows,i,j);
+
+                if (state == 0 && neighbours == 3){
+                     *((new_arr+i*rows)+j) = 1;
+                }
+                else if (state == 1 && (neighbours < 2 || neighbours >3)){
+                    *((new_arr+i*rows)+j) = 0;
+                }
+                else{
+                    *((new_arr+i*rows)+j) = state;
+                }
+            }
+
+
+
+
+
+        }
+    }
 
 }
 
@@ -193,7 +227,6 @@ int countNeighbours(int *array,int rows, int x, int y){
     for(int i =-1;i<2;i++){
         for(int j=-1;j<2;j++){
             // count live neighbours
-            //sum = sum + *((array + x*rows+i*rows)+y+j);
             sum = sum + *((array + rows*(x+i))+y+j);
         }
     }
