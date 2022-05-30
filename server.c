@@ -230,7 +230,7 @@ int* compute_game_of_life(int *arr,int rows, int cols){
             }
         }
     }
-    return new_arr;
+    return (int*)new_arr;
 }
 
 
