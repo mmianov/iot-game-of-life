@@ -236,8 +236,8 @@ void compute_game_of_life(int *arr,int *new_arr,int rows, int cols){
 
 
 int main(){
-    int rows = 5;
-    int cols = 5;
+    int rows = 20;
+    int cols = 60;
     int arr[rows][cols];
 //    memset(arr,0,rows*cols*sizeof(int));
 //    fill2DArray((int*)arr,rows,cols);
@@ -252,10 +252,9 @@ int main(){
     for(;;){
         memset(arr,0,rows*cols*sizeof(int));
         fill2DArray((int*)arr,rows,cols);
-        printf("Original array: \n");
         visualise_2Darray((int*)arr,rows,cols);
+        sleep(1);
         system("clear");
-        sleep(0.1);
 
     }
 
