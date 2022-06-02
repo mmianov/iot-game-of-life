@@ -264,10 +264,10 @@ int countNeighbours(int *array,int rows, int cols, int x, int y){
 	        //int wrap_cols = (y+j+cols) % cols;
             //int wrap_rows = (x+i+rows) % rows;
             // not sure which one to go with yet
-            int wrap_cols = (y+j+cols-1) % (cols-1);
-            int wrap_rows = (x+i+rows-1) % (rows-1);
+            int wrap_j = (y+j+cols) % (cols);
+            int wrap_i = (x+i+rows) % (rows);
             //sum = sum + *((array + rows*(x+i))+y+j);
-            sum = sum + *((array + cols*wrap_rows)+wrap_cols); // zmieniono na cols*wrap_rows
+            sum = sum + *((array + cols*wrap_i)+wrap_j); // zmieniono na cols*wrap_rows
         }
     }
     sum = sum - *((array + x*cols)+y); // zmieniono na x*cols + y
