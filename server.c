@@ -68,6 +68,31 @@ void display_game_nodes(struct game_node *game_nodes,int game_nodes_amount){
     }
 }
 
+// divides map according to amount of nodes in game and possible map size
+void divide_map(int game_nodes_amount){
+    // zawsze tworzona jest ta sama mapa (w zaleznosci od rozmiaru)
+    // obszary wyrażaone są jako prostokąty o 4 parametrach:
+    // 1. wiersz 2. kolumna 3. dlugosc w wierszach 4. dlugosc w kolumnach
+    // np. (0,0, 2,3) -> lewy górny róg macierzy, prostokat na 2 wiersze w dół i 3 kolumny w prawo
+    // warunek: podzielnosc dlugosci mapy: w przypadku 6 nodow np 40x90
+    // Przykład: int game_map[40][90]
+    // 2 nody: node1 = (0,0,20,90), node2 = (20,0,20,90)
+    // 3 nody: node1 = (0,0,40,30) node2 = (0,30,40,30) node3 = (0,60,40,30)
+    // 4 nody: node1 = (0,0,20,30) node2 = (0,30,20,30) node3 = (0,60,20,30) node4 = (20,0,20,90)
+    // 5 node'ow: node1 =(0,0,20,30) node2=(0,30,20,30), node3=(20,0,20,30) node4=(20,30,20,30) node5=(0,60,40,30)
+    // 6 node'ów: node1=(0,0,20,30) node2=(0,30,20,30) node3=(0,60,20,30) node4=(20,0,20,30) node5=(20,30,20,30) node6=(20,60,20,30)
+
+    // Przykład: int game_map[r][c]
+    // 2 nody: node1 = (0,0,r/2,c/3), node2 = (r/2,0,r/2,c/3)
+    // 3 nody: node1 = (0,0,r,c/3) node2 = (0,c/3,r,c/3) node3 = (0,2/3c,r,c/3)
+    // 4 nody: node1 = (0,0,r/2,c/3) node2 = (0,c/3,r/2,c/3) node3 = (0,2/3c,r/2,c/3) node4 = (r/2,0,r/2,c)
+    // 5 node'ow: node1 =(0,0,r/2,c/3) node2=(0,c/3,r/2,c/3), node3=(r/2,0,r/2,c/3) node4=(r/2,c/3,r/2,c/3) node5=(0,2/3c,r,c/3)
+    // 6 node'ów: node1=(0,0,r/2,c/3) node2=(0,c/3,r/2,c/3) node3=(0,2/3c,r/2,c/3) node4=(r/2,0,r/2,c/3)
+    // node5=(r/2,c/3,r/2,c/3) node6=(r/2,2/3c,r/2,c/3)
+}
+
+
+
 // --- SERVER FUNCTIONS ---
 
 // initializes UDP server
@@ -204,11 +229,11 @@ void fill2DArray(int *array,int rows, int cols){
         for(int j=0;j<cols;j++){
             int rand_val = rand()%2;
             if(rand_val == 1 && num_of_ones*5 < num_of_zeros){
-                          *((array+i*rows)+j) = rand_val;
+                          *((array+i*cols)+j) = rand_val; // zmieniono na i*cols zamiast i*rows
                           num_of_ones++;
                         }
             else{
-                 *((array+i*rows)+j) = 0;
+                 *((array+i*cols)+j) = 0; // zmieniono na i*cols zamiast i*rows
                   num_of_zeros++;
             }
         }
@@ -218,7 +243,7 @@ void fill2DArray(int *array,int rows, int cols){
 void visualise_2Darray(int *array,int rows, int cols){
     for(int i =0;i<rows;i++){
         for(int j=0;j<cols;j++){
-            if(*((array + i*rows)+j) == 0){
+            if(*((array + i*cols)+j) == 0){ //zmieniono na i*cols zamiast i*rows
                 printf("-");
             }
             else{
@@ -236,16 +261,16 @@ int countNeighbours(int *array,int rows, int cols, int x, int y){
     for(int i =-1;i<2;i++){
         for(int j=-1;j<2;j++){
             // count live neighbours
-	    //int wrap_cols = (y+j+cols) % cols;
+	        //int wrap_cols = (y+j+cols) % cols;
             //int wrap_rows = (x+i+rows) % rows;
             // not sure which one to go with yet
             int wrap_cols = (y+j+cols-1) % (cols-1);
             int wrap_rows = (x+i+rows-1) % (rows-1);
             //sum = sum + *((array + rows*(x+i))+y+j);
-            sum = sum + *((array + rows*wrap_rows)+wrap_cols);
+            sum = sum + *((array + cols*wrap_rows)+wrap_cols); // zmieniono na cols*wrap_rows
         }
     }
-    sum = sum - *((array + x*rows)+y);
+    sum = sum - *((array + x*cols)+y); // zmieniono na x*cols + y
     return sum;
 }
 
@@ -257,7 +282,7 @@ void compute_game_of_life(int *arr,int *new_arr,int rows, int cols){
      for(int i =0;i<rows;i++){
         for(int j=0;j<cols;j++){
             // get current cell state (state before computing next generation)
-            int state = *((arr+i*rows)+j);
+            int state = *((arr+i*cols)+j); // zmieniono na i*cols
             int one = 1;
             int zero = 0;
 
@@ -265,13 +290,13 @@ void compute_game_of_life(int *arr,int *new_arr,int rows, int cols){
             int neighbours = countNeighbours((int*)arr,rows,cols,i,j);
 
             if (state == 0 && neighbours == 3){
-                 memcpy(((new_arr+i*rows)+j),&one,sizeof(int));
+                 memcpy(((new_arr+i*cols)+j),&one,sizeof(int)); // zmieniono na i*cols
             }
             else if (state == 1 && (neighbours < 2 || neighbours >3)){
-                memcpy(((new_arr+i*rows)+j),&zero,sizeof(int));
+                memcpy(((new_arr+i*cols)+j),&zero,sizeof(int)); // zmieniono na i*cols
             }
             else{
-                memcpy(((new_arr+i*rows)+j),&state,sizeof(int));
+                memcpy(((new_arr+i*cols)+j),&state,sizeof(int)); // zmieniono na i*cols
             }
 
         }
