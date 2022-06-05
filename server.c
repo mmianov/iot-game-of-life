@@ -47,6 +47,21 @@ int node_area_cols = map_cols/2 + 2; // 2 additional cols for left and right bor
 
 // --- GAME NODES FUNCTIONS ---
 
+void visualise_2DarrayNumbers(int *array,int rows, int cols){
+    for(int i =0;i<rows;i++){
+        for(int j=0;j<cols;j++){
+            if(*((array + i*cols)+j) == 0){ //zmieniono na i*cols zamiast i*rows
+                printf("0");
+            }
+            else{
+                printf("1");
+            }
+
+        }
+        printf("\n");
+    }
+}
+
 // creates game nodes
 void create_game_nodes(struct game_node *game_nodes, int game_nodes_amount){
     for(int i=0;i<game_nodes_amount;i++){
@@ -239,20 +254,7 @@ void visualise_2Darray(int *array,int rows, int cols){
     }
 }
 
-void visualise_2DarrayNumbers(int *array,int rows, int cols){
-    for(int i =0;i<rows;i++){
-        for(int j=0;j<cols;j++){
-            if(*((array + i*cols)+j) == 0){ //zmieniono na i*cols zamiast i*rows
-                printf("0");
-            }
-            else{
-                printf("1");
-            }
 
-        }
-        printf("\n");
-    }
-}
 
 int countNeighbours(int *array,int rows, int cols, int x, int y){
     int sum = 0;
