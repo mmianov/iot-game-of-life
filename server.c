@@ -326,7 +326,7 @@ void divide_map(int map_size){
         visualise_2DarrayNumbers((int*)temp_area,node_area_rows,node_area_cols);
         sleep(5);
 
-        memset(temp_area,0,sizeof(temp_area));
+        //memset(temp_area,0,sizeof(temp_area));
     }
 
 
