@@ -33,8 +33,8 @@ char register_message[MAX_MSG_SIZE]; // register message (to be merge into ALP l
 struct game_node{
     int id; // node identifier
     struct in_addr IP_addr; // node ip address
-    const int cols; // columns in game of life 2D array
-    const int rows; // rows in game of life 2D array
+    int cols; // columns in game of life 2D array
+    int rows; // rows in game of life 2D array
     //int area[rows][cols];
     int sent_area_update; // value to see if node has already sent an area update
 };
@@ -55,7 +55,7 @@ void create_game_nodes(struct game_node *game_nodes, int game_nodes_amount){
         game_nodes[i].IP_addr = nodes[i].sin_addr;
         game_nodes[i].cols = 0;
         game_nodes[i].rows = 0;
-        memset(game_nodes[i].area,0,sizeof(game_nodes[i].area));
+        //memset(game_nodes[i].area,0,sizeof(game_nodes[i].area));
         game_nodes[i].sent_area_update = 0;
     }
 }
