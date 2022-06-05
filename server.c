@@ -35,7 +35,7 @@ struct game_node{
     struct in_addr IP_addr; // node ip address
     int cols; // columns in game of life 2D array
     int rows; // rows in game of life 2D array
-    int * area;
+    int ** area;
     int sent_area_update; // value to see if node has already sent an area update
 };
 
@@ -53,9 +53,12 @@ void create_game_nodes(struct game_node *game_nodes, int game_nodes_amount){
         // check struct sockaddr_in nodes[MAX_NODES] and only get registered nodes
         game_nodes[i].id = i+1;
         game_nodes[i].IP_addr = nodes[i].sin_addr;
-        game_nodes[i].cols = 0;
-        game_nodes[i].rows = 0;
-        memset(game_nodes[i].area,0,sizeof(game_nodes[i].area));
+        game_nodes[i].rows = node_area_rows;
+        game_nodes[i].cols = node_area_cols;
+        game_nodes[i].area = malloc(node_area_rows*sizeof(int*));
+        for(int j=0;j<node_area_rows;j++){
+             game_nodes[i].area[j] = malloc(node_area_cols*sizeof(int));
+        }
         game_nodes[i].sent_area_update = 0;
     }
 }
