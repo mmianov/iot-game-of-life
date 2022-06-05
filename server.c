@@ -397,6 +397,7 @@ int main(){
     divide_map((int*)area1,(int*)area2,(int*)area3,(int*)area4);
 
     game_nodes[0].area =(int**)area1;
+    game_nodes[1].area =(int**)area2;
     display_game_nodes(game_nodes,game_nodes_amount);
 //    printf("Area 1: \n");
 //    visualise_2DarrayNumbers((int*)area1,node_area_rows,node_area_cols);
