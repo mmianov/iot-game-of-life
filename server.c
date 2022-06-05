@@ -33,15 +33,15 @@ char register_message[MAX_MSG_SIZE]; // register message (to be merge into ALP l
 struct game_node{
     int id; // node identifier
     struct in_addr IP_addr; // node ip address
-    int cols; // columns in game of life 2D array
-    int rows; // rows in game of life 2D array
-    int area[rows][cols];
+    const int cols; // columns in game of life 2D array
+    const int rows; // rows in game of life 2D array
+    //int area[rows][cols];
     int sent_area_update; // value to see if node has already sent an area update
 };
 
 int game_nodes_amount = 4;
-int map_rows = 8;
-int map_cols = 6;
+const int map_rows = 8;
+const int map_cols = 6;
 int node_area_rows = map_rows/2 + 2; // 2 additional rows for top and bottom bordering areas
 int node_area_cols = map_cols/2 + 2; // 2 additional cols for left and right bordering areas
 
@@ -378,7 +378,6 @@ int main(){
 //        // set next generation to be current generation in next loop
 //        memcpy(arr,next_gen,rows*cols*sizeof(int));
 //    }
-       divide_map(1);
 
 //    // server setup
 //    initialize_server(&server_socket, SERVER_PORT);
