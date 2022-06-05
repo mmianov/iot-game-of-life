@@ -412,8 +412,12 @@ int main(){
     //int *protocol_message_test = (int*) game_nodes[0].area;
     char protocol_message[node_area_rows*node_area_cols];
     for(int i=0;i<node_area_rows*node_area_cols;i++){
-         printf("%d",*(*area1+ i));
+
+         printf("%d",*(*(int**)game_nodes[0].area+ i));
     }
+//    for(int i=0;i<node_area_rows*node_area_cols;i++){
+//         printf("%d",*(*area1+ i));
+//    }
 
     //sendto(server_socket, protocol_message, sizeof(protocol_message), 0, (struct sockaddr *)&game_nodes[0].net_addr, addr_len);
 
