@@ -276,7 +276,7 @@ void divide_map(int game_nodes_amount, int map_size){
     // fill array with random numbers - simulating user input
     fill2DArray((int*)map,40,80);
     printf("Original map: \n");
-    visualise_2Darray((int*)map,40,80);
+    visualise_2DarrayNumbers((int*)map,40,80);
     sleep(5);
 
     // divide map into 4 areas and additional surroundings rows and columns
@@ -310,7 +310,7 @@ void divide_map(int game_nodes_amount, int map_size){
     }
     system("clear");
     printf("Area1: \n");
-    visualise_2Darray((int*)area1,22,42);
+    visualise_2DarrayNumbers((int*)area1,22,42);
     sleep(5);
 
 
