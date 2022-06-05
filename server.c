@@ -270,8 +270,8 @@ int countNeighbours(int *array,int rows, int cols, int x, int y){
 void divide_map(int map_size){
     int game_nodes_amount = 4;
 
-    int map_rows = 8;
-    int map_cols = 6;
+    int map_rows = 6;
+    int map_cols = 8;
 
     int map[map_rows][map_cols];
     memset(map,0,sizeof(map));
