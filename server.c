@@ -40,8 +40,8 @@ struct game_node{
 };
 
 int game_nodes_amount = 4;
-const int map_rows = 8;
-const int map_cols = 6;
+const int map_rows = 6;
+const int map_cols = 8;
 int node_area_rows = map_rows/2 + 2; // 2 additional rows for top and bottom bordering areas
 int node_area_cols = map_cols/2 + 2; // 2 additional cols for left and right bordering areas
 
@@ -278,7 +278,7 @@ void divide_map(int *area1,int *area2,int *area3,int *area4){
     fill2DArray((int*)map,map_rows,map_cols);
     printf("Original map: \n");
     visualise_2DarrayNumbers((int*)map,map_rows,map_cols);
-    sleep(1);
+    sleep(5);
 
     int temp_area[node_area_rows][node_area_cols]; // area for calculations
 
