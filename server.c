@@ -297,13 +297,15 @@ void divide_map(int game_nodes_amount, int map_size){
 
              // check top and bottom
             if (i == 0 || i == 6){
-                 area1[i][j] = map[(i-1) % 10][j];
+                 //area1[i][j] = map[(i-1) % 10][j];
+                 area1[i][j] = map[(i-1) % 10][(j-1) % 20];
             }
 
             // check left and right border
             if(j==0 || j == 11){
                 // rows (i) stays the same
-                area1[i][j] = map[i][(j-1) % 20];
+                //area1[i][j] = map[i][(j-1) % 20];
+                area1[i][j] = map[(i-1) % 10][(j-1) % 20];
             }
 
 
