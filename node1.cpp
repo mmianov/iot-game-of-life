@@ -81,9 +81,13 @@ void loop(){
         int recv_packet = Udp.parsePacket();
             if(recv_packet){
                   int read_packet = Udp.read(protocolBuffer,48);
-                  Serial.println(receiveBuffer[0]);
-                  Serial.println(receiveBuffer[1]);
-                  Serial.println(receiveBuffer[2]);
+                  for(int i=0;i<48;i++){
+                   if(i % 6 == 0){
+                       Serial.println("\n");
+                   }
+                   Serial.println(receiveBuffer[i]);
+
+                  }
 //                   if(receiveBuffer[0] == 1<<0 | 1<<1 | 1<<2 | 1<<3){
 //                        Serial.println(receiveBuffer);
 //                        return 1;
