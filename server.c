@@ -428,7 +428,7 @@ int main(){
 
     }
 
-    sendto(server_socket, protocol_message, sizeof(protocol_message), 0, (struct sockaddr *)&game_nodes[0].net_addr, addr_len);
+    sendto(server_socket, protocol_message, strlen(protocol_message), 0, (struct sockaddr *)&game_nodes[0].net_addr, addr_len);
 
 
 
