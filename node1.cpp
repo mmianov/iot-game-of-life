@@ -56,6 +56,7 @@ int register_node(){
                 }
              
     }
+    millis_delay(500);
   } 
     return 0;
 
