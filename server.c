@@ -271,36 +271,36 @@ void divide_map(int game_nodes_amount, int map_size){
     // 4 nody
 
     // wybor mapy
-    int map[40][80];
+    int map[10][20];
     memset(map,0,sizeof(map));
     // fill array with random numbers - simulating user input
-    fill2DArray((int*)map,40,80);
+    fill2DArray((int*)map,10,20);
     printf("Original map: \n");
-    visualise_2DarrayNumbers((int*)map,40,80);
+    visualise_2DarrayNumbers((int*)map,10,20);
     sleep(5);
 
     // divide map into 4 areas and additional surroundings rows and columns
     // each area has +2 columns (left and right) and + 2 rows (top and bottom)
-    int area1[22][42];
-    int area2[22][42];
-    int area3[22][42];
-    int area4[22][42];
+    int area1[7][12];
+    int area2[7][12];
+    int area3[7][12];
+    int area4[7][12];
 
     // area1 [0-19][0-39]
     // area2 [0-19][40-79]
     // area3 [20-39][0-39]
     // area4 [20-39][40-79]
     // fill area 1
-    for(int i=0;i<22;i++){
-        for(int j=0;j<42;j++){
+    for(int i=0;i<7;i++){
+        for(int j=0;j<12;j++){
             // check left and right border
-            if(j==0 || j == 41){
+            if(j==0 || j == 12){
                 // rows (i) stays the same
-                area1[i][j] = map[i][(j-1) % 80];
+                area1[i][j] = map[i][(j-1) % 20];
             }
             // check top and bottom
-            if (i == 0 || i == 21){
-                 area1[i][j] = map[(i-1) % 40][j];
+            if (i == 0 || i == 7){
+                 area1[i][j] = map[(i-1) % 10][j];
             }
 
             else{
@@ -310,12 +310,8 @@ void divide_map(int game_nodes_amount, int map_size){
     }
     system("clear");
     printf("Area1: \n");
-    visualise_2DarrayNumbers((int*)area1,22,42);
+    visualise_2DarrayNumbers((int*)area1,7,12);
     sleep(5);
-
-
-
-
 
 }
 
