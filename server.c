@@ -270,8 +270,8 @@ int countNeighbours(int *array,int rows, int cols, int x, int y){
 void divide_map(int map_size){
     int game_nodes_amount = 4;
 
-    int map_rows = 10;
-    int map_cols = 20;
+    int map_rows = 8;
+    int map_cols = 6;
 
     int map[map_rows][map_cols];
     memset(map,0,sizeof(map));
@@ -317,12 +317,12 @@ void divide_map(int map_size){
                 }
             }
         }
-        if(n == 0) memcpy(area1,temp_area,sizeof(temp_area));
-        if (n == 1) memcpy(area2,temp_area,sizeof(temp_area));
-        if (n == 2) memcpy(area3,temp_area,sizeof(temp_area));
-        if (n == 3) memcpy(area4,temp_area,sizeof(temp_area));
-        system("clear");
-        printf("Area %d: \n",n);
+//        if(n == 0) memcpy(area1,temp_area,sizeof(temp_area));
+//        if (n == 1) memcpy(area2,temp_area,sizeof(temp_area));
+//        if (n == 2) memcpy(area3,temp_area,sizeof(temp_area));
+//        if (n == 3) memcpy(area4,temp_area,sizeof(temp_area));
+//        system("clear");
+        printf("Area %d: \n",n + 1);
         visualise_2DarrayNumbers((int*)temp_area,node_area_rows,node_area_cols);
         sleep(5);
 
