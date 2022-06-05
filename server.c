@@ -19,6 +19,7 @@
 #define GAME_STATE_REGISTER 1
 #define NODE_AREA_UPDATE 2
 #define GAME_STATE_REGISTER_CONFIRM 0<<0 | 0<<1 | 0<<2 | 1<<3
+#define BOUNDARY_UPDATE 1<<0 | 1<<1 | 1<<2 | 1<<3
 
 int server_socket;
 
@@ -32,7 +33,7 @@ char register_message[MAX_MSG_SIZE]; // register message (to be merge into ALP l
 // structure to hold information about nodes in the game
 struct game_node{
     int id; // node identifier
-    struct in_addr IP_addr; // node ip address
+    struct sockaddr_in net_addr; // node ip address
     int cols; // columns in game of life 2D array
     int rows; // rows in game of life 2D array
     int ** area;
@@ -67,7 +68,7 @@ void create_game_nodes(struct game_node *game_nodes, int game_nodes_amount){
     for(int i=0;i<game_nodes_amount;i++){
         // check struct sockaddr_in nodes[MAX_NODES] and only get registered nodes
         game_nodes[i].id = i+1;
-        game_nodes[i].IP_addr = nodes[i].sin_addr;
+        game_nodes[i].net_addr = nodes[i];
         game_nodes[i].rows = node_area_rows;
         game_nodes[i].cols = node_area_cols;
         game_nodes[i].area = malloc(node_area_rows*sizeof(int*));
@@ -82,8 +83,8 @@ void display_game_nodes(struct game_node *game_nodes,int game_nodes_amount){
     for(int i=0;i<game_nodes_amount;i++){
         printf("---------------------------------\n\r");
         printf("Node id: %d\n",game_nodes[i].id);
-        printf("Node IP: %s\n",inet_ntoa(game_nodes[i].IP_addr));
-        printf("Cols: %d Rows: %d\n",game_nodes[i].cols,game_nodes[i].rows);
+        printf("Node IP: %s\n",inet_ntoa(game_nodes[i].net_addr.sin_addr);
+        printf("Cols: %d Rows: %d (frame included)\n",game_nodes[i].cols,game_nodes[i].rows);
         printf("Node area with frame:\n");
         visualise_2DarrayNumbers((int*)game_nodes[i].area,game_nodes[i].rows,game_nodes[i].cols);
         printf("Area update status: %d\n",game_nodes[i].sent_area_update);
@@ -398,18 +399,17 @@ int main(){
 
     game_nodes[0].area =(int**)area1;
     game_nodes[1].area =(int**)area2;
+    game_nodes[2].area =(int**)area3;
+    game_nodes[3].area =(int**)area4;
     display_game_nodes(game_nodes,game_nodes_amount);
-//    printf("Area 1: \n");
-//    visualise_2DarrayNumbers((int*)area1,node_area_rows,node_area_cols);
-//    printf("Area 2: \n");
-//    visualise_2DarrayNumbers((int*)area2,node_area_rows,node_area_cols);
-//    printf("Area 3: \n");
-//    visualise_2DarrayNumbers((int*)area3,node_area_rows,node_area_cols);
-//    printf("Area 4: \n");
-//    visualise_2DarrayNumbers((int*)area4,node_area_rows,node_area_cols);
+
+//    memset(&register_message,0,sizeof(register_message));
+//    register_message[0] = BOUNDARY_UPDATE;
+//    sendto(server_socket, register_message, strlen(register_message), 0, (struct sockaddr *)&node_addr, addr_len);
 
 
-//    close(server_socket);
+
+    close(server_socket);
 
 
 }
