@@ -278,7 +278,7 @@ void divide_map(int *area1,int *area2,int *area3,int *area4){
     fill2DArray((int*)map,map_rows,map_cols);
     printf("Original map: \n");
     visualise_2DarrayNumbers((int*)map,map_rows,map_cols);
-    sleep(5);
+    sleep(1);
 
     int temp_area[node_area_rows][node_area_cols]; // area for calculations
 
@@ -288,13 +288,12 @@ void divide_map(int *area1,int *area2,int *area3,int *area4){
 
     area_adjust[0][1] = 0;
     area_adjust[0][0] = 0;
-    area_adjust[1][1] = (map_rows/2) -1;
+    area_adjust[1][1] = (map_rows/2) + (node_area_rows>node_area_cols ? -1 : 1);
     area_adjust[1][0] = 0;
     area_adjust[2][1] = 0;
-    area_adjust[2][0] = (map_cols/2) + 1;
-    area_adjust[3][1] = (map_rows/2) -1;;
-    area_adjust[3][0] = (map_cols/2) + 1;;
-
+    area_adjust[2][0] = (map_cols/2) + (node_area_rows>node_area_cols ? 1 : -1);
+    area_adjust[3][1] = (map_rows/2) + (node_area_rows>node_area_cols ? -1 : 1);
+    area_adjust[3][0] = (map_cols/2) + (node_area_rows>node_area_cols ? 1 : -1);
 
     for(int n=0;n<game_nodes_amount;n++){
         for(int i=0;i<node_area_rows;i++){
