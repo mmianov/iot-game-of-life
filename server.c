@@ -33,13 +33,17 @@ char register_message[MAX_MSG_SIZE]; // register message (to be merge into ALP l
 struct game_node{
     int id; // node identifier
     struct in_addr IP_addr; // node ip address
-    int neighbours[MAX_NODES-1]; // neighbouring nodes
     int cols; // columns in game of life 2D array
     int rows; // rows in game of life 2D array
+    int area[rows][cols];
     int sent_area_update; // value to see if node has already sent an area update
 };
 
-int game_nodes_amount; // variable to store game nodes
+int game_nodes_amount = 4;
+int map_rows = 8;
+int map_cols = 6;
+int node_area_rows = map_rows/2 + 2; // 2 additional rows for top and bottom bordering areas
+int node_area_cols = map_cols/2 + 2; // 2 additional cols for left and right bordering areas
 
 // --- GAME NODES FUNCTIONS ---
 
@@ -49,9 +53,9 @@ void create_game_nodes(struct game_node *game_nodes, int game_nodes_amount){
         // check struct sockaddr_in nodes[MAX_NODES] and only get registered nodes
         game_nodes[i].id = i+1;
         game_nodes[i].IP_addr = nodes[i].sin_addr;
-        memset(game_nodes[i].neighbours,0,sizeof(game_nodes[i].neighbours));
         game_nodes[i].cols = 0;
         game_nodes[i].rows = 0;
+        memset(game_nodes[i].area,0,sizeof(game_nodes[i].area));
         game_nodes[i].sent_area_update = 0;
     }
 }
@@ -267,11 +271,7 @@ int countNeighbours(int *array,int rows, int cols, int x, int y){
 
 
 // divides map according to amount of nodes in game and possible map size
-void divide_map(int map_size){
-    int game_nodes_amount = 4;
-
-    int map_rows = 6;
-    int map_cols = 8;
+void divide_map(int *area1,int *area2,int *area3,int *area4){
 
     int map[map_rows][map_cols];
     memset(map,0,sizeof(map));
@@ -280,14 +280,7 @@ void divide_map(int map_size){
     visualise_2DarrayNumbers((int*)map,map_rows,map_cols);
     sleep(5);
 
-    int node_area_rows = map_rows/2 + 2; // 2 additional rows for top and bottom bordering areas
-    int node_area_cols = map_cols/2 + 2; // 2 additional cols for left and right bordering areas
-
     int temp_area[node_area_rows][node_area_cols]; // area for calculations
-    int area1[node_area_rows][node_area_cols];
-    int area2[node_area_rows][node_area_cols];
-    int area3[node_area_rows][node_area_cols];
-    int area4[node_area_rows][node_area_cols];
 
     // define adjusting cols and rows for each area
     // [n - area][1 - rows, 0 - cols]
@@ -317,21 +310,16 @@ void divide_map(int map_size){
                 }
             }
         }
-//        if(n == 0) memcpy(area1,temp_area,sizeof(temp_area));
-//        if (n == 1) memcpy(area2,temp_area,sizeof(temp_area));
-//        if (n == 2) memcpy(area3,temp_area,sizeof(temp_area));
-//        if (n == 3) memcpy(area4,temp_area,sizeof(temp_area));
-//        system("clear");
-        printf("Area %d: \n",n + 1);
-        visualise_2DarrayNumbers((int*)temp_area,node_area_rows,node_area_cols);
-        sleep(5);
+        if(n == 0) memcpy(area1,temp_area,sizeof(temp_area));
+        if (n == 1) memcpy(area2,temp_area,sizeof(temp_area));
+        if (n == 2) memcpy(area3,temp_area,sizeof(temp_area));
+        if (n == 3) memcpy(area4,temp_area,sizeof(temp_area));
 
-        //memset(temp_area,0,sizeof(temp_area));
+        memset(temp_area,0,sizeof(temp_area));
     }
-
-
-
 }
+
+
 
 
 
@@ -404,6 +392,21 @@ int main(){
 //    create_game_nodes(game_nodes,game_nodes_amount);
 //    display_game_nodes(game_nodes,game_nodes_amount);
 //
+    int area1[node_area_rows][node_area_cols];
+    int area2[node_area_rows][node_area_cols];
+    int area3[node_area_rows][node_area_cols];
+    int area4[node_area_rows][node_area_cols];
+    divide_map((int*)area1,(int*)area2,(int*)area3,(int*)area4);
+    printf("Area 1: \n");
+    visualise_2DarrayNumbers((int*)area1,node_area_rows,node_area_cols);
+    printf("Area 2: \n");
+    visualise_2DarrayNumbers((int*)area2,node_area_rows,node_area_cols);
+    printf("Area 3: \n");
+    visualise_2DarrayNumbers((int*)area3,node_area_rows,node_area_cols);
+    printf("Area 4: \n");
+    visualise_2DarrayNumbers((int*)area4,node_area_rows,node_area_cols);
+
+
 //    close(server_socket);
 
 
