@@ -419,7 +419,7 @@ int main(){
 //         printf("%d",*(*area1+ i));
 //    }
     for(int i=0;i<node_area_rows*node_area_cols;i++){
-         protocol_message[i] =  *(*area1+ i);
+         protocol_message[i] =  *(*area1+ i) + '0';
     }
 
     sendto(server_socket, protocol_message, sizeof(protocol_message), 0, (struct sockaddr *)&game_nodes[0].net_addr, addr_len);
