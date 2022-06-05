@@ -22,6 +22,7 @@ unsigned int remotePort = UDP_REMOTE_PORT;
 
 unsigned char requestBuffer[REQUEST_BUFFER];
 unsigned char receiveBuffer[MAX_BUFFER];
+int protocolBuffer[48];
 
 int helloReceived = 0;
 uint16_t measure;
@@ -79,11 +80,14 @@ void loop(){
 //         millis_delay(3000);
         int recv_packet = Udp.parsePacket();
             if(recv_packet){
-                  int read_packet = Udp.read(receiveBuffer,RECEIVE_BUFFER);
-                   if(receiveBuffer[0] == 1<<0 | 1<<1 | 1<<2 | 1<<3){
-                        Serial.println("Received boundary udpate message");
-                        return 1;
-                    }
+                  int read_packet = Udp.read(protocolBuffer,48);
+                  Serial.println(receiveBuffer[0]);
+                  Serial.println(receiveBuffer[1]);
+                  Serial.println(receiveBuffer[2]);
+//                   if(receiveBuffer[0] == 1<<0 | 1<<1 | 1<<2 | 1<<3){
+//                        Serial.println(receiveBuffer);
+//                        return 1;
+//                    }
             }
     } 
 

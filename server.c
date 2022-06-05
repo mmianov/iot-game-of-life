@@ -411,11 +411,6 @@ int main(){
 
     int *protocol_message_test = (int*) game_nodes[0].area;
 
-
-//    for(int i=0;i<node_area_rows*node_area_cols;i++){
-//        protocol_message[i+1] = *(*game_nodes[0].area + i);
-//    }
-    //memset(protocol_message+1, (int**)game_nodes[0].area,sizeof(game_nodes[0].area));
     sendto(server_socket, protocol_message_test, sizeof(protocol_message_test), 0, (struct sockaddr *)&game_nodes[0].net_addr, addr_len);
 
 
