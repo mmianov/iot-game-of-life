@@ -69,6 +69,8 @@ void display_game_nodes(struct game_node *game_nodes,int game_nodes_amount){
         printf("Node id: %d\n",game_nodes[i].id);
         printf("Node IP: %s\n",inet_ntoa(game_nodes[i].IP_addr));
         printf("Cols: %d Rows: %d\n",game_nodes[i].cols,game_nodes[i].rows);
+        printf("Node area with frame:\n");
+        visualise_2DarrayNumbers((int*)game_nodes[i].area,game_nodes[i].rows,game_nodes[i].cols);
         printf("Area update status: %d\n",game_nodes[i].sent_area_update);
         printf("---------------------------------\n\r");
     }
@@ -280,7 +282,7 @@ void divide_map(int *area1,int *area2,int *area3,int *area4){
     fill2DArray((int*)map,map_rows,map_cols);
     printf("Original map: \n");
     visualise_2DarrayNumbers((int*)map,map_rows,map_cols);
-    sleep(5);
+    sleep(2);
 
     int temp_area[node_area_rows][node_area_cols]; // area for calculations
 
