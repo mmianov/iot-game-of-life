@@ -280,8 +280,8 @@ void divide_map(int map_size){
     visualise_2DarrayNumbers((int*)map,map_rows,map_cols);
     sleep(5);
 
-    node_area_rows = map_rows/2 + 2; // 2 additional rows for top and bottom bordering areas
-    node_area_cols = map_cols/2 + 2; // 2 additional cols for left and right bordering areas
+    int node_area_rows = map_rows/2 + 2; // 2 additional rows for top and bottom bordering areas
+    int node_area_cols = map_cols/2 + 2; // 2 additional cols for left and right bordering areas
 
     int temp_area[node_area_rows][node_area_cols]; // area for calculations
     int area1[node_area_rows][node_area_cols];
