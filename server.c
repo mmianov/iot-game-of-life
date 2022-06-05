@@ -35,7 +35,7 @@ struct game_node{
     struct in_addr IP_addr; // node ip address
     int cols; // columns in game of life 2D array
     int rows; // rows in game of life 2D array
-    //int area[rows][cols];
+    int * area;
     int sent_area_update; // value to see if node has already sent an area update
 };
 
@@ -55,7 +55,7 @@ void create_game_nodes(struct game_node *game_nodes, int game_nodes_amount){
         game_nodes[i].IP_addr = nodes[i].sin_addr;
         game_nodes[i].cols = 0;
         game_nodes[i].rows = 0;
-        //memset(game_nodes[i].area,0,sizeof(game_nodes[i].area));
+        memset(game_nodes[i].area,0,sizeof(game_nodes[i].area));
         game_nodes[i].sent_area_update = 0;
     }
 }
@@ -65,7 +65,6 @@ void display_game_nodes(struct game_node *game_nodes,int game_nodes_amount){
         printf("---------------------------------\n\r");
         printf("Node id: %d\n",game_nodes[i].id);
         printf("Node IP: %s\n",inet_ntoa(game_nodes[i].IP_addr));
-        // neighbours
         printf("Cols: %d Rows: %d\n",game_nodes[i].cols,game_nodes[i].rows);
         printf("Area update status: %d\n",game_nodes[i].sent_area_update);
         printf("---------------------------------\n\r");
@@ -318,11 +317,6 @@ void divide_map(int *area1,int *area2,int *area3,int *area4){
     }
 }
 
-
-
-
-
-
 void compute_game_of_life(int *arr,int *new_arr,int rows, int cols){
 
     // iterate over array
@@ -378,31 +372,33 @@ int main(){
 //        memcpy(arr,next_gen,rows*cols*sizeof(int));
 //    }
 
-//    // server setup
-//    initialize_server(&server_socket, SERVER_PORT);
-//    open_registration();
-//
-//    // store game nodes
-//    struct game_node game_nodes[game_nodes_amount];
-//    memset(game_nodes,0,sizeof(game_nodes));
-//
-//    // initialize game nodes
-//    create_game_nodes(game_nodes,game_nodes_amount);
-//    display_game_nodes(game_nodes,game_nodes_amount);
-//
+    // server setup
+    initialize_server(&server_socket, SERVER_PORT);
+    open_registration();
+
+    // store game nodes
+    struct game_node game_nodes[game_nodes_amount];
+    memset(game_nodes,0,sizeof(game_nodes));
+
+    // initialize game nodes
+    create_game_nodes(game_nodes,game_nodes_amount);
+
     int area1[node_area_rows][node_area_cols];
     int area2[node_area_rows][node_area_cols];
     int area3[node_area_rows][node_area_cols];
     int area4[node_area_rows][node_area_cols];
     divide_map((int*)area1,(int*)area2,(int*)area3,(int*)area4);
-    printf("Area 1: \n");
-    visualise_2DarrayNumbers((int*)area1,node_area_rows,node_area_cols);
-    printf("Area 2: \n");
-    visualise_2DarrayNumbers((int*)area2,node_area_rows,node_area_cols);
-    printf("Area 3: \n");
-    visualise_2DarrayNumbers((int*)area3,node_area_rows,node_area_cols);
-    printf("Area 4: \n");
-    visualise_2DarrayNumbers((int*)area4,node_area_rows,node_area_cols);
+
+    game_nodes[0].area = area1;
+    display_game_nodes(game_nodes,game_nodes_amount);
+//    printf("Area 1: \n");
+//    visualise_2DarrayNumbers((int*)area1,node_area_rows,node_area_cols);
+//    printf("Area 2: \n");
+//    visualise_2DarrayNumbers((int*)area2,node_area_rows,node_area_cols);
+//    printf("Area 3: \n");
+//    visualise_2DarrayNumbers((int*)area3,node_area_rows,node_area_cols);
+//    printf("Area 4: \n");
+//    visualise_2DarrayNumbers((int*)area4,node_area_rows,node_area_cols);
 
 
 //    close(server_socket);
