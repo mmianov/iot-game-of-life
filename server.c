@@ -19,7 +19,7 @@
 #define GAME_STATE_REGISTER 1
 #define NODE_AREA_UPDATE 2
 #define GAME_STATE_REGISTER_CONFIRM 0<<0 | 0<<1 | 0<<2 | 1<<3
-#define BOUNDARY_UPDATE 1<<0 | 1<<1 | 1<<2 | 1<<3
+#define BOUNDARY_UPDATE_CODE 15
 
 int server_socket;
 
@@ -46,6 +46,8 @@ const int map_rows = 6;
 const int map_cols = 8;
 int node_area_rows = map_rows/2 + 2; // 2 additional rows for top and bottom bordering areas
 int node_area_cols = map_cols/2 + 2; // 2 additional cols for left and right bordering areas
+
+int protocol_message[node_area_rows*node_area_cols + 1];
 
 // --- GAME NODES FUNCTIONS ---
 
@@ -404,9 +406,10 @@ int main(){
     game_nodes[3].area =(int**)area4;
     display_game_nodes(game_nodes,game_nodes_amount);
 
-    memset(&register_message,0,sizeof(register_message));
-    register_message[0] = BOUNDARY_UPDATE;
-    sendto(server_socket, register_message, strlen(register_message), 0, (struct sockaddr *)&game_nodes[0].net_addr, addr_len);
+    memset(&protocol_message,0,sizeof(protocol_message));
+    protocol_message[0] = BOUNDARY_UPDATE_CODE;
+    memset(protocol_message+1, game_nodes[0].area,sizeof(game_nodes[0].area));
+    sendto(server_socket, protocol_message, strlen(protocol_message), 0, (struct sockaddr *)&game_nodes[0].net_addr, addr_len);
 
 
 
