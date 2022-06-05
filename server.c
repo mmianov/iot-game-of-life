@@ -321,14 +321,17 @@ void divide_map(int map_size){
         else if (n == 1) memcpy(area2,temp_area,sizeof(temp_area));
         else if (n == 2) memcpy(area3,temp_area,sizeof(temp_area));
         else if (n == 3) memcpy(area4,temp_area,sizeof(temp_area));
+        system("clear");
+        printf("Area %d: \n",n);
+        visualise_2DarrayNumbers((int*)temp_area,node_area_rows,node_area_cols);
+        sleep(5);
 
         memset(temp_area,0,sizeof(temp_area));
+
+
     }
 
-    system("clear");
-    printf("Area1: \n");
-    visualise_2DarrayNumbers((int*)area1,node_area_rows,node_area_cols);
-    sleep(5);
+
 
 }
 
