@@ -22,7 +22,7 @@ unsigned int remotePort = UDP_REMOTE_PORT;
 
 unsigned char requestBuffer[REQUEST_BUFFER];
 unsigned char receiveBuffer[MAX_BUFFER];
-int protocolBuffer[48];
+unsigned char protocolBuffer[48];
 
 int helloReceived = 0;
 uint16_t measure;
