@@ -83,7 +83,7 @@ void display_game_nodes(struct game_node *game_nodes,int game_nodes_amount){
     for(int i=0;i<game_nodes_amount;i++){
         printf("---------------------------------\n\r");
         printf("Node id: %d\n",game_nodes[i].id);
-        printf("Node IP: %s\n",inet_ntoa(game_nodes[i].net_addr.sin_addr);
+        printf("Node IP: %s\n",inet_ntoa(game_nodes[i].net_addr.sin_addr));
         printf("Cols: %d Rows: %d (frame included)\n",game_nodes[i].cols,game_nodes[i].rows);
         printf("Node area with frame:\n");
         visualise_2DarrayNumbers((int*)game_nodes[i].area,game_nodes[i].rows,game_nodes[i].cols);
