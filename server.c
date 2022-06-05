@@ -267,56 +267,64 @@ int countNeighbours(int *array,int rows, int cols, int x, int y){
 
 
 // divides map according to amount of nodes in game and possible map size
-void divide_map(int game_nodes_amount, int map_size){
-    // 4 nody
+void divide_map(int map_size){
+    int game_nodes_amount = 4;
 
-    // wybor mapy
-    int map[10][20];
+    int map_rows = 10;
+    int map_cols = 20;
+
+    int map[map_rows][map_cols];
     memset(map,0,sizeof(map));
-    // fill array with random numbers - simulating user input
-    fill2DArray((int*)map,10,20);
+    fill2DArray((int*)map,map_rows,map_cols);
     printf("Original map: \n");
-    visualise_2DarrayNumbers((int*)map,10,20);
+    visualise_2DarrayNumbers((int*)map,map_rows,map_cols);
     sleep(5);
 
-    // divide map into 4 areas and additional surroundings rows and columns
-    // each area has +2 columns (left and right) and + 2 rows (top and bottom)
-    int area1[7][12];
-    int area2[7][12];
-    int area3[7][12];
-    int area4[7][12];
+    node_area_rows = map_rows/2 + 2; // 2 additional rows for top and bottom bordering areas
+    node_area_cols = map_cols/2 + 2; // 2 additional cols for left and right bordering areas
 
-    // area1 [0-19][0-39]
-    // area2 [0-19][40-79]
-    // area3 [20-39][0-39]
-    // area4 [20-39][40-79]
-    // fill area 1
-    // 0 0
-    for(int i=0;i<7;i++){
-        for(int j=0;j<12;j++){
+    int temp_area[node_area_rows][node_area_cols]; // area for calculations
+    int area1[node_area_rows][node_area_cols];
+    int area2[node_area_rows][node_area_cols];
+    int area3[node_area_rows][node_area_cols];
+    int area4[node_area_rows][node_area_cols];
 
-             // check top and bottom
-            if (i == 0 || i == 6){
-                 //area1[i][j] = map[(i-1) % 10][j];
-                 area1[i][j] = map[(i-1) % 10][(j-1) % 20];
-            }
+    // define adjusting cols and rows for each area
+    // [n - area][1 - rows, 0 - cols]
+    int area_adjust[4][2];
 
-            // check left and right border
-            if(j==0 || j == 11){
-                // rows (i) stays the same
-                //area1[i][j] = map[i][(j-1) % 20];
-                area1[i][j] = map[(i-1) % 10][(j-1) % 20];
-            }
+    area_adjust[0][1] = 0;
+    area_adjust[0][0] = 0;
+    area_adjust[1][1] = (map_rows/2) -1;
+    area_adjust[1][0] = 0;
+    area_adjust[2][1] = 0;
+    area_adjust[2][0] = (map_cols/2) + 1;
+    area_adjust[3][1] = (map_rows/2) -1;;
+    area_adjust[3][0] = (map_cols/2) + 1;;
 
 
-            else{
-                 area1[i][j] = map[i-1][j-1];
+    for(int n=0;n<game_nodes_amount;n++){
+        for(int i=0;i<node_area_rows;i++){
+            for(int j=0;j<node_area_cols;j++){
+                // area surrounding 'frame' conditions
+                if(i == 0 || i == node_area_rows-1 || j == 0 || j == node_area_cols -1){
+                    int i_mapped = (i+area_adjust[n][0]-1)<0 ? i+area_adjust[n][0]-1+map_rows : (i+area_adjust[n][0]-1)%map_rows;
+                    int j_mapped = (j+area_adjust[n][1]-1)<0 ? j+area_adjust[n][1]-1+map_cols : (j+area_adjust[n][1]-1)%map_cols;
+                    temp_area[i][j] = map[i_mapped][j_mapped];
+                }
             }
         }
+        if(n == 0) memcpy(area1,temp_area,sizeof(temp_area));
+        else if (n == 1) memcpy(area2,temp_area,sizeof(temp_area));
+        else if (n == 2) memcpy(area3,temp_area,sizeof(temp_area));
+        else if (n == 3) memcpy(area4,temp_area,sizeof(temp_area));
+
+        memset(temp_area,0,sizeof(temp_area));
     }
+
     system("clear");
     printf("Area1: \n");
-    visualise_2DarrayNumbers((int*)area1,7,12);
+    visualise_2DarrayNumbers((int*)area1,node_area_rows,node_area_cols);
     sleep(5);
 
 }
@@ -378,7 +386,7 @@ int main(){
 //        // set next generation to be current generation in next loop
 //        memcpy(arr,next_gen,rows*cols*sizeof(int));
 //    }
-       divide_map(4,1);
+       divide_map(1);
 
 //    // server setup
 //    initialize_server(&server_socket, SERVER_PORT);
