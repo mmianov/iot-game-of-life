@@ -74,8 +74,16 @@ void loop(){
   
     int registration = register_node();
     while(registration){
-         Serial.println("Waiting for game to start ...");
-         millis_delay(3000);
+//         Serial.println("Waiting for game to start ...");
+//         millis_delay(3000);
+        int recv_packet = Udp.parsePacket();
+            if(recv_packet){
+                  int read_packet = Udp.read(receiveBuffer,RECEIVE_BUFFER);
+                   if(receiveBuffer[0] == 1<<0 | 1<<1 | 1<<2 | 1<<3){
+                        Serial.println("Received boundary udpate message");
+                        return 1;
+                    }
+            }
     } 
 
 }

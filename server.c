@@ -28,7 +28,8 @@ struct sockaddr_in nodes[MAX_NODES]; // variable to hold nodes in registration p
 int addr_len = sizeof(struct sockaddr_in);
 
 char received_message[MAX_MSG_SIZE]; // received message
-char register_message[MAX_MSG_SIZE]; // register message (to be merge into ALP later on)
+char register_message[MAX_MSG_SIZE]; // register message (to be merged into ALP later on)
+
 
 // structure to hold information about nodes in the game
 struct game_node{
@@ -403,9 +404,9 @@ int main(){
     game_nodes[3].area =(int**)area4;
     display_game_nodes(game_nodes,game_nodes_amount);
 
-//    memset(&register_message,0,sizeof(register_message));
-//    register_message[0] = BOUNDARY_UPDATE;
-//    sendto(server_socket, register_message, strlen(register_message), 0, (struct sockaddr *)&node_addr, addr_len);
+    memset(&register_message,0,sizeof(register_message));
+    register_message[0] = BOUNDARY_UPDATE;
+    sendto(server_socket, register_message, strlen(register_message), 0, (struct sockaddr *)&game_nodes[0].net_addr, addr_len);
 
 
 
