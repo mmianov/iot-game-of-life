@@ -68,30 +68,6 @@ void display_game_nodes(struct game_node *game_nodes,int game_nodes_amount){
     }
 }
 
-// divides map according to amount of nodes in game and possible map size
-void divide_map(int game_nodes_amount){
-    // zawsze tworzona jest ta sama mapa (w zaleznosci od rozmiaru)
-    // obszary wyrażaone są jako prostokąty o 4 parametrach:
-    // 1. wiersz 2. kolumna 3. dlugosc w wierszach 4. dlugosc w kolumnach
-    // np. (0,0, 2,3) -> lewy górny róg macierzy, prostokat na 2 wiersze w dół i 3 kolumny w prawo
-    // warunek: podzielnosc dlugosci mapy: w przypadku 6 nodow np 40x90
-    // Przykład: int game_map[40][90]
-    // 2 nody: node1 = (0,0,20,90), node2 = (20,0,20,90)
-    // 3 nody: node1 = (0,0,40,30) node2 = (0,30,40,30) node3 = (0,60,40,30)
-    // 4 nody: node1 = (0,0,20,30) node2 = (0,30,20,30) node3 = (0,60,20,30) node4 = (20,0,20,90)
-    // 5 node'ow: node1 =(0,0,20,30) node2=(0,30,20,30), node3=(20,0,20,30) node4=(20,30,20,30) node5=(0,60,40,30)
-    // 6 node'ów: node1=(0,0,20,30) node2=(0,30,20,30) node3=(0,60,20,30) node4=(20,0,20,30) node5=(20,30,20,30) node6=(20,60,20,30)
-
-    // Przykład: int game_map[r][c]
-    // 2 nody: node1 = (0,0,r/2,c/3), node2 = (r/2,0,r/2,c/3)
-    // 3 nody: node1 = (0,0,r,c/3) node2 = (0,c/3,r,c/3) node3 = (0,2/3c,r,c/3)
-    // 4 nody: node1 = (0,0,r/2,c/3) node2 = (0,c/3,r/2,c/3) node3 = (0,2/3c,r/2,c/3) node4 = (r/2,0,r/2,c)
-    // 5 node'ow: node1 =(0,0,r/2,c/3) node2=(0,c/3,r/2,c/3), node3=(r/2,0,r/2,c/3) node4=(r/2,c/3,r/2,c/3) node5=(0,2/3c,r,c/3)
-    // 6 node'ów: node1=(0,0,r/2,c/3) node2=(0,c/3,r/2,c/3) node3=(0,2/3c,r/2,c/3) node4=(r/2,0,r/2,c/3)
-    // node5=(r/2,c/3,r/2,c/3) node6=(r/2,2/3c,r/2,c/3)
-}
-
-
 
 // --- SERVER FUNCTIONS ---
 
@@ -255,6 +231,21 @@ void visualise_2Darray(int *array,int rows, int cols){
     }
 }
 
+void visualise_2DarrayNumbers(int *array,int rows, int cols){
+    for(int i =0;i<rows;i++){
+        for(int j=0;j<cols;j++){
+            if(*((array + i*cols)+j) == 0){ //zmieniono na i*cols zamiast i*rows
+                printf("0");
+            }
+            else{
+                printf("1");
+            }
+
+        }
+        printf("\n");
+    }
+}
+
 int countNeighbours(int *array,int rows, int cols, int x, int y){
     int sum = 0;
 
@@ -273,6 +264,61 @@ int countNeighbours(int *array,int rows, int cols, int x, int y){
     sum = sum - *((array + x*cols)+y); // zmieniono na x*cols + y
     return sum;
 }
+
+
+// divides map according to amount of nodes in game and possible map size
+void divide_map(int game_nodes_amount, int map_size){
+    // 4 nody
+
+    // wybor mapy
+    int map[40][80];
+    memset(map,0,sizeof(map));
+    // fill array with random numbers - simulating user input
+    fill2DArray((int*)map,40,80);
+    printf("Original map: \n");
+    visualise_2Darray((int*)map,40,80);
+    sleep(5);
+
+    // divide map into 4 areas and additional surroundings rows and columns
+    // each area has +2 columns (left and right) and + 2 rows (top and bottom)
+    int area1[22][42];
+    int area2[22][42];
+    int area3[22][42];
+    int area4[22][42];
+
+    // area1 [0-19][0-39]
+    // area2 [0-19][40-79]
+    // area3 [20-39][0-39]
+    // area4 [20-39][40-79]
+    // fill area 1
+    for(int i=0;i<22;i++){
+        for(int j=0;j<42;j++){
+            // check left and right border
+            if(j==0 || j == 41){
+                // rows (i) stays the same
+                area1[i][j] = map[i][(j-1) % 80];
+            }
+            // check top and bottom
+            if (i == 0 || i == 21){
+                 area1[i][j] = map[(i-1) % 40][j];
+            }
+
+            else{
+                 area1[i][j] = map[i-1][j-1];
+            }
+        }
+    }
+    system("clear");
+    printf("Area1: \n");
+    visualise_2Darray((int*)area1,22,42);
+    sleep(5);
+
+
+
+
+
+}
+
 
 
 
@@ -306,30 +352,31 @@ void compute_game_of_life(int *arr,int *new_arr,int rows, int cols){
 
 
 int main(){
-    int rows = 40;
-    int cols = 90;
-    int arr[rows][cols];
-    memset(arr,0,rows*cols*sizeof(int));
-    fill2DArray((int*)arr,rows,cols);
-    //printf("Original array: \n");
-    visualise_2Darray((int*)arr,rows,cols);
-    sleep(1);
-    system("clear");
-
-    int next_gen[rows][cols];
-    memcpy(next_gen,arr,rows*cols*sizeof(int));
-
-    for(;;){
-//        // copy contents of current generation
-//        memcpy(next_gen,arr,rows*cols*sizeof(int));
-        // compute next generation and save in next_gen array
-        compute_game_of_life((int*)arr,(int*)next_gen,rows,cols);
-        visualise_2Darray((int*)next_gen,rows,cols);
-        sleep(1);
-        system("clear");
-        // set next generation to be current generation in next loop
-        memcpy(arr,next_gen,rows*cols*sizeof(int));
-    }
+//    int rows = 40;
+//    int cols = 90;
+//    int arr[rows][cols];
+//    memset(arr,0,rows*cols*sizeof(int));
+//    fill2DArray((int*)arr,rows,cols);
+//    //printf("Original array: \n");
+//    visualise_2Darray((int*)arr,rows,cols);
+//    sleep(1);
+//    system("clear");
+//
+//    int next_gen[rows][cols];
+//    memcpy(next_gen,arr,rows*cols*sizeof(int));
+//
+//    for(;;){
+////        // copy contents of current generation
+////        memcpy(next_gen,arr,rows*cols*sizeof(int));
+//        // compute next generation and save in next_gen array
+//        compute_game_of_life((int*)arr,(int*)next_gen,rows,cols);
+//        visualise_2Darray((int*)next_gen,rows,cols);
+//        sleep(1);
+//        system("clear");
+//        // set next generation to be current generation in next loop
+//        memcpy(arr,next_gen,rows*cols*sizeof(int));
+//    }
+       divide_map(4,1);
 
 //    // server setup
 //    initialize_server(&server_socket, SERVER_PORT);
