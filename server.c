@@ -312,6 +312,9 @@ void divide_map(int map_size){
                     int j_mapped = (j+area_adjust[n][1]-1)<0 ? j+area_adjust[n][1]-1+map_cols : (j+area_adjust[n][1]-1)%map_cols;
                     temp_area[i][j] = map[i_mapped][j_mapped];
                 }
+                else{
+                    temp_area[i][j] = map[i+area_adjust[n][0]-1][j+area_adjust[n][1]-1];
+                }
             }
         }
         if(n == 0) memcpy(area1,temp_area,sizeof(temp_area));
