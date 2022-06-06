@@ -333,7 +333,7 @@ void divide_map(int *area1,int *area2,int *area3,int *area4){
 void reassemble_map(int*new_map,int *area1,int *area2,int *area3,int *area4){
 
     for(int i=0;i<map_rows;i++){
-        for(j=0;j<map_cols;j++){
+        for(int j=0;j<map_cols;j++){
             if(i < node_area_rows/2 && j < node_area_cols/2){
                 *((new_map+i*map_cols)+j) = *((area1+i*node_area_cols)+j);
             }
