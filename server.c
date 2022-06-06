@@ -47,7 +47,7 @@ const int map_cols = 8;
 int node_area_rows = map_rows/2 + 2; // 2 additional rows for top and bottom bordering areas
 int node_area_cols = map_cols/2 + 2; // 2 additional cols for left and right bordering areas
 
-int protocol_message[6*8 + 1];
+char protocol_message[7];
 
 // --- GAME NODES FUNCTIONS ---
 
@@ -355,14 +355,14 @@ void compute_game_of_life(int *arr,int *new_arr,int rows, int cols){
     }
 }
 
-void write_to_buffer(char *buf, int *area, int rows, int cols){
+void write_to_buffer(int *area, int rows, int cols){
     *(buf + 0) = BOUNDARY_UPDATE_CODE;
     int bytes = 1;
     int shift = 0;
     for(int i=0;i<rows;i++){
         for(int j=0;j<cols;j++){
             if (shift==8) bytes++;
-            *(buf + bytes) = *((area + i*cols)+j) << (shift % 8);
+            protocol_message[bytes] = *((area + i*cols)+j) << (shift % 8);
             shift++;
         }
     }
@@ -421,8 +421,8 @@ int main(){
     memset(&protocol_message,0,sizeof(protocol_message));
 
     //int *protocol_message_test = (int*) game_nodes[0].area;
-    char protocol_message[7];
-    write_to_buffer(protocol_message,(int*)area1,node_area_rows,node_area_cols);
+
+    write_to_buffer((int*)area1,node_area_rows,node_area_cols);
     for(int i=0;i<7;i++){
         printf("%c\n",protocol_message[i]);
     }
