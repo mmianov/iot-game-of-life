@@ -367,7 +367,7 @@ int write_to_buffer(int *area, int rows, int cols){
                 bytes++;
             }
             //protocol_message[bytes] = *((area + i*cols)+j) << (shift % 8);
-            protocol_message[bytes] = protocol_message[bytes] | 1 << shift;
+            protocol_message[bytes] = protocol_message[bytes] | *((area + i*cols)+j) << shift;
             shift++;
         }
     }
