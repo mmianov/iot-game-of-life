@@ -71,8 +71,7 @@ int receive_area(){
     if(recv_packet){
         if(receiveBuffer[0] == BOUNDARY_UPDATE_CODE){
             int read_packet = Udp.read(protocolBuffer,10);
-             Serial.print("[*]Received boundary update message!");
-             Serial.println(protocolBuffer[0]);
+             Serial.print("[*]Received boundary update message!\n");
              int shift = 0;
              int bytes = 1;
              for(int i=0;i<5;i++){
@@ -192,6 +191,9 @@ void loop(){
         if(register_node()){
             registered = 1;
         }
+        Serial.println("-------------------------------------")
+        Serial.println("[*] The game is about to begin ...")
+        Serial.println("-------------------------------------")
     }
 
     millis_delay(100);
@@ -199,6 +201,7 @@ void loop(){
     int received_area = receive_area();
     if(received_area){
 
+        received_conf = 0;
         // copy received array to the one that will hold the state of the new generation
         int next_gen_area[5][6];
         memcpy(next_gen_area,area,5*6*sizeof(int));
