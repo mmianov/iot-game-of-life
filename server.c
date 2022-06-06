@@ -426,6 +426,7 @@ int main(){
     for(int i=0;i<7;i++){
         printf("%c\n",protocol_message[i]);
     }
+    printf("%s",protocol_message);
 
 //    for(int i=0;i<node_area_rows*node_area_cols;i++){
 //
