@@ -164,8 +164,8 @@ int write_to_buffer(int *area, int rows, int cols){
     protocolBuffer[0] = AREA_UPDATE_CODE;
     int bytes = 1;
     int shift = 0;
-    for(int i=0;i<rows;i++){
-        for(int j=0;j<cols;j++){
+    for(int i=1;i<rows-1;i++){
+        for(int j=1;j<cols-1;j++){
             if (shift==8){
                 shift = 0;
                 bytes++;
@@ -211,9 +211,9 @@ void loop(){
 
         // insert into protcol buffer
         memset(protocolBuffer,0,sizeof(protocolBuffer));
-        // insert bits into buffer from server.c>
+        // insert bits into buffer
         int written_bytes = write_to_buffer((int*)next_gen_area,5,6);
-        Serial.println("[*]Prepared protocl buffer");
+        Serial.println("[*]Prepared protocol buffer");
 
         // send to server
         Udp.beginPacket(serverIP,remotePort);
