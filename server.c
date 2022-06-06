@@ -19,7 +19,7 @@
 #define GAME_STATE_REGISTER 1
 #define NODE_AREA_UPDATE 2
 #define GAME_STATE_REGISTER_CONFIRM 0<<0 | 0<<1 | 0<<2 | 1<<3
-#define BOUNDARY_UPDATE_CODE 15
+#define BOUNDARY_UPDATE_CODE  1<<0 | 1<<1 | 1<<2 | 1<<3
 
 int server_socket;
 
@@ -355,6 +355,18 @@ void compute_game_of_life(int *arr,int *new_arr,int rows, int cols){
     }
 }
 
+void write_to_buffer(char *buf, int *area, int rows, int cols){
+    *(buf + 0) = BOUNDARY_UPDATE_CODE;
+    int bytes = 1;
+    int shift = 0;
+    for(int i=0;i<rows;i++){
+        for(int j=0;j<cols;j++){
+            if (shift==8) bytes++;
+            *(buf + bytes) = *((area + i*cols)+j) << (shift % 8);
+            shift++;
+        }
+    }
+}
 
 
 int main(){
@@ -411,6 +423,8 @@ int main(){
 
     //int *protocol_message_test = (int*) game_nodes[0].area;
     char protocol_message[node_area_rows*node_area_cols];
+    write_to_buffer(protocol_message,area1,node_area_rows,node_area_cols);
+
 //    for(int i=0;i<node_area_rows*node_area_cols;i++){
 //
 //         printf("%d",*(*area1+ i));
@@ -418,15 +432,6 @@ int main(){
 //    for(int i=0;i<node_area_rows*node_area_cols;i++){
 //         printf("%d",*(*area1+ i));
 //    }
-    for(int i=0;i<node_area_rows*node_area_cols;i++){
-        if( *(*area1+ i) == 0){
-         protocol_message[i] =  '0';
-        }
-        else if( *(*area1+ i) == 1){
-         protocol_message[i] =  '1';
-        }
-
-    }
 
     sendto(server_socket, protocol_message, strlen(protocol_message), 0, (struct sockaddr *)&game_nodes[0].net_addr, addr_len);
 
