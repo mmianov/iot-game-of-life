@@ -232,7 +232,7 @@ void fill2DArray(int *array,int rows, int cols){
     for(int i =0;i<rows;i++){
         for(int j=0;j<cols;j++){
             int rand_val = rand()%2;
-            if(rand_val == 1 && num_of_ones*5 < num_of_zeros){
+            if(rand_val == 1 && num_of_ones*2 < num_of_zeros){
                           *((array+i*cols)+j) = rand_val; // zmieniono na i*cols zamiast i*rows
                           num_of_ones++;
                         }
@@ -462,23 +462,37 @@ int main(){
     // TODO 3. odebrać na serwerze tablice od node'a, wpisac wartosci w odpowiednie miejsca na glownej mapie,
     // bez ramki
     // TODO 4. synchronizacja 4 hostów: rozesłać grę, czekać na odpowiedź, wyświetlić mapę, rozesłać nową gre itp.
+    // TODO5 ! Dodać obsługę rozłączenia node gdy za długo nie odeśle area
+    // TODO6 ! gra w zycie na granicy mapy
     // Kwestia do zastanowienia: potwierdzenie odbioru
+
+
+    // send initial area
     sendto(server_socket, protocol_message, strlen(protocol_message), 0, (struct sockaddr *)&game_nodes[0].net_addr, addr_len);
     int area1_temp[node_area_rows][node_area_cols];
 
+    for(;;){
+        memset(&protocol_message,0,sizeof(protocol_message));
+        // receive are update from node
+        game_nodes[0].net_addr = receive_data(protocol_message);
+        printf("Received area message\n");
+        // get area from buffer
+        receive_from_buffer((int*)area1_temp,node_area_rows,node_area_cols);
+        // send confirmation
+        //protocol_message[0] = AREA_UPDATE_CODE;
+//        sendto(server_socket, protocol_message, strlen(protocol_message), 0, (struct sockaddr *)& game_nodes[0].net_addr, addr_len);
+//        printf("Sent confirmation!\n");
+        // print next gen
+        visualise_2DarrayNumbers((int*)area1_temp,node_area_rows,node_area_cols);
+        sleep(1);
+        system("clear");
+        // the line below is for simulating 1 node game of life - noramlly it would have to be written to map without frames, then divided again and resent
+        write_to_buffer((int*)area1_temp,node_area_rows,node_area_cols);
+        sendto(server_socket, protocol_message, strlen(protocol_message), 0, (struct sockaddr *)&game_nodes[0].net_addr, addr_len);
+        //printf("Sent new area to caluculate!");
+        // potem: złączenie mapy, ponowny podział i wysłanie
+    }
 
-    memset(&protocol_message,0,sizeof(protocol_message));
-    // receive are update from node
-    game_nodes[0].net_addr = receive_data(protocol_message);
-    printf("Received area message\n");
-    // get area from buffer
-    receive_from_buffer((int*)area1_temp,node_area_rows,node_area_cols);
-    // send confirmation
-    protocol_message[0] = AREA_UPDATE_CODE;
-    sendto(server_socket, protocol_message, strlen(protocol_message), 0, (struct sockaddr *)& game_nodes[0].net_addr, addr_len);
-    printf("Sent confirmation!\n");
-    // print next gen
-    visualise_2DarrayNumbers((int*)area1_temp,node_area_rows,node_area_cols);
 
 
 
