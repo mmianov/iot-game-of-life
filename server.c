@@ -383,8 +383,8 @@ int receive_from_buffer(int *area, int rows, int cols){
               shift = 0;
               bytes++;
            }
-           int bit = (protocolBuffer[bytes] >> shift)&1;
-          *((array+i*cols)+j) = (protocolBuffer[bytes] >> shift) & 1;
+           int bit = (protocol_message[bytes] >> shift)&1;
+          *((area+i*cols)+j) = (protocol_message[bytes] >> shift) & 1;
            shift++;
         }
     }
@@ -467,7 +467,7 @@ int main(){
 
     for(;;){
         memset(&protocol_message,0,sizeof(protocol_message));
-        game_node[0].net_addr = receive_data(protocol_message);
+        game_nodes[0].net_addr = receive_data(protocol_message);
         printf("Received area message");
         receive_from_buffer((int*)area1_temp,node_area_rows,node_area_cols);
         visualise_2DarrayNumbers((int*)area1_temp,node_area_rows,node_area_cols);
