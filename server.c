@@ -461,7 +461,7 @@ int main(){
     int area3[node_area_rows][node_area_cols];
     int area4[node_area_rows][node_area_cols];
     divide_map((int*)area1,(int*)area2,(int*)area3,(int*)area4);
-
+    int area1_temp[node_area_rows][node_area_cols];
     memset(&protocol_message,0,sizeof(protocol_message));
     // receive area update from node
     game_nodes[0].net_addr = receive_data(protocol_message);
