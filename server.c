@@ -366,7 +366,6 @@ int write_to_buffer(int *area, int rows, int cols){
                 shift = 0;
                 bytes++;
             }
-            //protocol_message[bytes] = *((area + i*cols)+j) << (shift % 8);
             protocol_message[bytes] = protocol_message[bytes] | (*((area + i*cols)+j) << shift);
             shift++;
         }
@@ -374,6 +373,23 @@ int write_to_buffer(int *area, int rows, int cols){
     return bytes;
 }
 
+int receive_from_buffer(int *area, int rows, int cols){
+
+    int shift = 0;
+    int bytes = 1;
+    for(int i=0;i<rows;i++){
+        for(int j=0;j<cols;j++){
+           if(shift == 8){
+              shift = 0;
+              bytes++;
+           }
+           int bit = (protocolBuffer[bytes] >> shift)&1;
+          *((array+i*cols)+j) = (protocolBuffer[bytes] >> shift) & 1;
+           shift++;
+        }
+    }
+
+}
 
 int main(){
 //    int rows = 40;
@@ -430,10 +446,6 @@ int main(){
     // node_area_rows = 5, node_area_cols = 6
     int written = write_to_buffer((int*)area1,node_area_rows,node_area_cols);
     printf("Wrote %d bytes\n",written);
-    for(int i=0;i<7;i++){
-        printf("%c\n",protocol_message[i]);
-    }
-    printf("%s",protocol_message);
 
 //    for(int i=0;i<node_area_rows*node_area_cols;i++){
 //
@@ -443,9 +455,24 @@ int main(){
 //         printf("%d",*(*area1+ i));
 //    }
 
+    // TODO 1. zmienić area1 na game_node[0].area w write_to_buffer
+    // TODO 2. odebrać wiadomość po stronie node'a, wpisać do tablicy, policzyć next_gen,
+    // wpisać bajt po bajcie do tablicy, odesłać
+    // TODO 3. odebrać na serwerze tablice od node'a, wpisac wartosci w odpowiednie miejsca na glownej mapie,
+    // bez ramki
+    // TODO 4. synchronizacja 4 hostów: rozesłać grę, czekać na odpowiedź, wyświetlić mapę, rozesłać nową gre itp.
+    // Kwestia do zastanowienia: potwierdzenie odbioru
     sendto(server_socket, protocol_message, strlen(protocol_message), 0, (struct sockaddr *)&game_nodes[0].net_addr, addr_len);
+    int area1_temp[node_area_rows][node_area_cols];
 
+    for(;;){
+        memset(&protocol_message,0,sizeof(protocol_message));
+        game_node[0].net_addr = receive_data(protocol_message);
+        printf("Received area message");
+        receive_from_buffer((int*)area1_temp,node_area_rows,node_area_cols);
+        visualise_2DarrayNumbers((int*)area1_temp,node_area_rows,node_area_cols);
 
+    }
 
     close(server_socket);
 
