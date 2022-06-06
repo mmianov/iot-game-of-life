@@ -19,7 +19,7 @@
 #define GAME_STATE_REGISTER 1
 #define NODE_AREA_UPDATE 2
 #define GAME_STATE_REGISTER_CONFIRM 0<<0 | 0<<1 | 0<<2 | 1<<3
-#define BOUNDARY_UPDATE_CODE 15
+#define BOUNDARY_UPDATE_CODE  1<<0 | 1<<1 | 1<<2 | 1<<3
 
 int server_socket;
 
@@ -44,10 +44,10 @@ struct game_node{
 int game_nodes_amount = 4;
 const int map_rows = 6;
 const int map_cols = 8;
-int node_area_rows = map_rows/2 + 2; // 2 additional rows for top and bottom bordering areas
-int node_area_cols = map_cols/2 + 2; // 2 additional cols for left and right bordering areas
+int node_area_rows = map_rows/2 + 2; // 2 additional rows for top and bottom bordering areas //
+int node_area_cols = map_cols/2 + 2; // 2 additional cols for left and right bordering areas //
 
-int protocol_message[6*8 + 1];
+char protocol_message[5];
 
 // --- GAME NODES FUNCTIONS ---
 
@@ -356,6 +356,24 @@ void compute_game_of_life(int *arr,int *new_arr,int rows, int cols){
 }
 
 
+int write_to_buffer(int *area, int rows, int cols){
+    protocol_message[0] = BOUNDARY_UPDATE_CODE;
+    int bytes = 1;
+    int shift = 0;
+    for(int i=0;i<rows;i++){
+        for(int j=0;j<cols;j++){
+            if (shift==8){
+                shift = 0;
+                bytes++;
+            }
+            //protocol_message[bytes] = *((area + i*cols)+j) << (shift % 8);
+            protocol_message[bytes] = protocol_message[bytes] | (*((area + i*cols)+j) << shift);
+            shift++;
+        }
+    }
+    return bytes;
+}
+
 
 int main(){
 //    int rows = 40;
@@ -407,11 +425,25 @@ int main(){
     display_game_nodes(game_nodes,game_nodes_amount);
 
     memset(&protocol_message,0,sizeof(protocol_message));
-    //protocol_message[0] = BOUNDARY_UPDATE_CODE;
 
-    int *protocol_message_test = (int*) game_nodes[0].area;
+    //int *protocol_message_test = (int*) game_nodes[0].area;
+    // node_area_rows = 5, node_area_cols = 6
+    int written = write_to_buffer((int*)area1,node_area_rows,node_area_cols);
+    printf("Wrote %d bytes\n",written);
+    for(int i=0;i<7;i++){
+        printf("%c\n",protocol_message[i]);
+    }
+    printf("%s",protocol_message);
 
-    sendto(server_socket, protocol_message_test, sizeof(protocol_message_test), 0, (struct sockaddr *)&game_nodes[0].net_addr, addr_len);
+//    for(int i=0;i<node_area_rows*node_area_cols;i++){
+//
+//         printf("%d",*(*area1+ i));
+//    }
+//    for(int i=0;i<node_area_rows*node_area_cols;i++){
+//         printf("%d",*(*area1+ i));
+//    }
+
+    sendto(server_socket, protocol_message, strlen(protocol_message), 0, (struct sockaddr *)&game_nodes[0].net_addr, addr_len);
 
 
 
