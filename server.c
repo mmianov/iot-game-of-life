@@ -57,24 +57,12 @@ char protocol_message[5];
 void visualise_2DarrayNumbers(int *array,int rows, int cols){
     for(int i =0;i<rows;i++){
         for(int j=0;j<cols;j++){
-            if(*((array + i*cols)+j) == 1){ //zmieniono na i*cols zamiast i*rows
-                printf("1");
-            }
-             else if(*((array + i*cols)+j) == 2){ //zmieniono na i*cols zamiast i*rows
-                printf("2");
-            }
-            else if(*((array + i*cols)+j) == 3){ //zmieniono na i*cols zamiast i*rows
-                printf("3");
-            }
-            else if(*((array + i*cols)+j) == 4){ //zmieniono na i*cols zamiast i*rows
-                printf("4");
-            }
-            else if(*((array + i*cols)+j) == 0){ //zmieniono na i*cols zamiast i*rows
+           if(*((array + i*cols)+j) == 0){ //zmieniono na i*cols zamiast i*rows
                 printf("0");
             }
-//            else{
-//                printf("1");
-//            }
+            else{
+                printf("1");
+            }
 
         }
         printf("\n");
