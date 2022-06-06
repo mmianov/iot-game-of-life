@@ -355,6 +355,7 @@ void compute_game_of_life(int *arr,int *new_arr,int rows, int cols){
     }
 }
 
+
 int write_to_buffer(int *area, int rows, int cols){
     protocol_message[0] = BOUNDARY_UPDATE_CODE;
     int bytes = 1;
@@ -366,7 +367,7 @@ int write_to_buffer(int *area, int rows, int cols){
                 bytes++;
             }
             //protocol_message[bytes] = *((area + i*cols)+j) << (shift % 8);
-            protocol_message[bytes] = 1 << shift;
+            protocol_message[bytes] = protocol_message[bytes] | 1 << shift;
             shift++;
         }
     }
@@ -426,7 +427,7 @@ int main(){
     memset(&protocol_message,0,sizeof(protocol_message));
 
     //int *protocol_message_test = (int*) game_nodes[0].area;
-
+    // node_area_rows = 4, node_area_cols = 6
     int written = write_to_buffer((int*)area1,node_area_rows,node_area_cols);
     printf("Wrote %d bytes\n",written);
     for(int i=0;i<7;i++){
