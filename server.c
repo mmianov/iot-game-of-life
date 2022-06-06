@@ -44,10 +44,10 @@ struct game_node{
 int game_nodes_amount = 4;
 const int map_rows = 6;
 const int map_cols = 8;
-int node_area_rows = map_rows/2 + 2; // 2 additional rows for top and bottom bordering areas
-int node_area_cols = map_cols/2 + 2; // 2 additional cols for left and right bordering areas
+int node_area_rows = map_rows/2 + 2; // 2 additional rows for top and bottom bordering areas //
+int node_area_cols = map_cols/2 + 2; // 2 additional cols for left and right bordering areas //
 
-char protocol_message[7];
+char protocol_message[5];
 
 // --- GAME NODES FUNCTIONS ---
 
@@ -427,7 +427,7 @@ int main(){
     memset(&protocol_message,0,sizeof(protocol_message));
 
     //int *protocol_message_test = (int*) game_nodes[0].area;
-    // node_area_rows = 4, node_area_cols = 6
+    // node_area_rows = 5, node_area_cols = 6
     int written = write_to_buffer((int*)area1,node_area_rows,node_area_cols);
     printf("Wrote %d bytes\n",written);
     for(int i=0;i<7;i++){
