@@ -340,20 +340,16 @@ void reassemble_map(int*new_map,int *area1,int *area2,int *area3,int *area4){
     for(int i=0;i<map_rows;i++){
         for(int j=0;j<map_cols;j++){
             if(i < map_rows/2 && j < map_cols/2){
-                *((new_map+i*map_cols)+j) = *((area1+(i+1)*node_area_cols)+(j+1)); // area1[i+1][j+1]
-
+                *((new_map+i*map_cols)+j) = *((area1+i*area_cols)+j);
             }
             else if(i < map_rows/2 && j >= map_cols/2){
-                *((new_map+i*map_cols)+j) = *((area2+(i+1)*node_area_cols)+(j+1));
-
+                *((new_map+i*map_cols)+j) = *((area2+i*area_cols)+j);
             }
             else if(i >= map_rows/2 && j < map_cols/2){
-                *((new_map+i*map_cols)+j) = *((area3+(i+1)*node_area_cols)+(j+1));
-
+                *((new_map+i*map_cols)+j) = *((area3+i*area_cols)+j);
             }
             else if(i >= map_rows/2 && j >= map_cols/2){
-                *((new_map+i*map_cols)+j) = *((area4+(i+1)*node_area_cols)+(j+1));
-
+                *((new_map+i*map_cols)+j) = *((area4+i*area_cols)+j);
             }
         }
     }
@@ -466,19 +462,31 @@ int main(){
     int area4[node_area_rows][node_area_cols];
     divide_map((int*)area1,(int*)area2,(int*)area3,(int*)area4);
 
-    printf("Area 1:\n");
-    visualise_2DarrayNumbers((int*)area1,node_area_rows,node_area_cols);
-    printf("Area 2:\n");
-    visualise_2DarrayNumbers((int*)area2,node_area_rows,node_area_cols);
-    printf("Area 3:\n");
-    visualise_2DarrayNumbers((int*)area3,node_area_rows,node_area_cols);
-    printf("Area 4:\n");
-    visualise_2DarrayNumbers((int*)area4,node_area_rows,node_area_cols);
+    memset(&protocol_message,0,sizeof(protocol_message));
+    // receive area update from node
+    game_nodes[0].net_addr = receive_data(protocol_message);
+    printf("Received area message\n");
+    // get area from buffer
+    receive_from_buffer((int*)area1_temp,node_area_rows,node_area_cols);
+
+    // print next gen
+    printf("Calculated area: \n");
+    visualise_2DarrayNumbers((int*)area1_temp,node_area_rows,node_area_cols);
 
     int re_map[map_rows][map_cols];
-    reassemble_map((int*)re_map,(int*)area1,(int*)area2,(int*)area3,(int*)area4);
+
+    reassemble_map((int*)re_map,(int*)area1_temp,(int*)area2,(int*)area3,(int*)area4);
     printf("Reassembled map: \n");
     visualise_2DarrayNumbers((int*)re_map,map_rows,map_cols);
+
+
+    // the line below is for simulating 1 node game of life - noramlly it would have to be written to map without frames, then divided again and resent
+//    write_to_buffer((int*)area1_temp,node_area_rows,node_area_cols);
+//    sendto(server_socket, protocol_message, strlen(protocol_message), 0, (struct sockaddr *)&game_nodes[0].net_addr, addr_len);
+
+
+
+
 
 //    game_nodes[0].area =(int**)area1;
 //    game_nodes[1].area =(int**)area2;
