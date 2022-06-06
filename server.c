@@ -45,6 +45,8 @@ struct game_node{
 int game_nodes_amount = 4;
 const int map_rows = 6;
 const int map_cols = 8;
+int area_rows = map_rows/2;
+int area_cols = map_cols/2;
 int node_area_rows = map_rows/2 + 2; // 2 additional rows for top and bottom bordering areas //
 int node_area_cols = map_cols/2 + 2; // 2 additional cols for left and right bordering areas //
 
@@ -335,16 +337,16 @@ void reassemble_map(int*new_map,int *area1,int *area2,int *area3,int *area4){
     for(int i=0;i<map_rows;i++){
         for(int j=0;j<map_cols;j++){
             if(i < node_area_rows/2 && j < node_area_cols/2){
-                *((new_map+i*map_cols)+j) = *((area1+i*node_area_cols)+j);
+                *((new_map+i*map_cols)+j) = *((area1+(i+1)*area_cols)+(j+1));
             }
             else if(i < node_area_rows/2 && j >= node_area_cols/2){
-                *((new_map+i*map_cols)+j) = *((area2+i*node_area_cols)+j);
+                *((new_map+i*map_cols)+j) = *((area2+(i+1)*area_cols)+(j+1));
             }
             else if(i >= node_area_rows/2 && j < node_area_cols/2){
-                *((new_map+i*map_cols)+j) = *((area3+i*node_area_cols)+j);
+                *((new_map+i*map_cols)+j) = *((area3+(i+1)*area_cols)+(j+1));
             }
             else if(i >= node_area_rows/2 && j >= node_area_cols/2){
-                *((new_map+i*map_cols)+j) = *((area4+i*node_area_cols)+j);
+                *((new_map+i*map_cols)+j) = *((area4+(i+1)*area_cols)+(j+1));
             }
         }
     }
