@@ -27,7 +27,7 @@ unsigned char protocolBuffer[48];
 int helloReceived = 0;
 uint16_t measure;
 uint32_t timer;
-
+int area[5][6];
 
 
 void millis_delay(unsigned long delay){
@@ -75,18 +75,34 @@ void setup(){
 void loop(){
   
     int registration = register_node();
+    millis_delay(100);
     while(registration){
 //         Serial.println("Waiting for game to start ...");
 //         millis_delay(3000);
         int recv_packet = Udp.parsePacket();
             if(recv_packet){
-                  int read_packet = Udp.read(protocolBuffer,48);
-                  for(int i=0;i<48;i++){
-                   if(i % 6 == 0){
-                       Serial.println("\n");
-                   }
-                   Serial.println(receiveBuffer[i]);
+                  int read_packet = Udp.read(protocolBuffer,10);
+                  Serial.print("Code name: ");
+                  Serial.println(protocolBuffer[0]);
+                 int shift = 0;
+                 int bytes = 1;
+                 for(int i=0;i<5;i++){
+                    for(int j=0;j<6;j++){
+                       if(shift == 8){
+                          shift = 0;
+                          bytes++;
+                       }
+                       int bit = (protocolBuffer[bytes] >> shift)&1;
+                       area[i][j] = (protocolBuffer[bytes] >> shift) & 1;
+                       shift++;
+                    }
+                 }
 
+                  for(int i=0;i<5;i++){
+                        for(int j=0;j<6;j++){
+                           Serial.print(area[i][j]);
+                        }
+           		Serial.println("");
                   }
 //                   if(receiveBuffer[0] == 1<<0 | 1<<1 | 1<<2 | 1<<3){
 //                        Serial.println(receiveBuffer);
