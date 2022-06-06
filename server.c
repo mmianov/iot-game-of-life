@@ -423,7 +423,7 @@ int main(){
 
     //int *protocol_message_test = (int*) game_nodes[0].area;
     char protocol_message[node_area_rows*node_area_cols];
-    write_to_buffer(protocol_message,area1,node_area_rows,node_area_cols);
+    write_to_buffer(protocol_message,(int*)area1,node_area_rows,node_area_cols);
 
 //    for(int i=0;i<node_area_rows*node_area_cols;i++){
 //
