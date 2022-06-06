@@ -356,7 +356,7 @@ void compute_game_of_life(int *arr,int *new_arr,int rows, int cols){
 }
 
 void write_to_buffer(int *area, int rows, int cols){
-    *(buf + 0) = BOUNDARY_UPDATE_CODE;
+    protocol_message[0] = BOUNDARY_UPDATE_CODE;
     int bytes = 1;
     int shift = 0;
     for(int i=0;i<rows;i++){
