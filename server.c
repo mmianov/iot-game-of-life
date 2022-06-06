@@ -20,6 +20,7 @@
 #define NODE_AREA_UPDATE 2
 #define GAME_STATE_REGISTER_CONFIRM 0<<0 | 0<<1 | 0<<2 | 1<<3
 #define BOUNDARY_UPDATE_CODE  1<<0 | 1<<1 | 1<<2 | 1<<3
+#define AREA_UPDATE_CODE 1<<0 | 0<<1 | 1<<2 | 0<<3
 
 int server_socket;
 
@@ -465,14 +466,20 @@ int main(){
     sendto(server_socket, protocol_message, strlen(protocol_message), 0, (struct sockaddr *)&game_nodes[0].net_addr, addr_len);
     int area1_temp[node_area_rows][node_area_cols];
 
-    for(;;){
-        memset(&protocol_message,0,sizeof(protocol_message));
-        game_nodes[0].net_addr = receive_data(protocol_message);
-        printf("Received area message");
-        receive_from_buffer((int*)area1_temp,node_area_rows,node_area_cols);
-        visualise_2DarrayNumbers((int*)area1_temp,node_area_rows,node_area_cols);
 
-    }
+    memset(&protocol_message,0,sizeof(protocol_message));
+    // receive are update from node
+    game_nodes[0].net_addr = receive_data(protocol_message);
+    printf("Received area message");
+    // get area from buffer
+    receive_from_buffer((int*)area1_temp,node_area_rows,node_area_cols);
+    // send confirmation
+    protocol_message[0] = AREA_UPDATE_CODE;
+    sendto(server_socket, protocol_message, strlen(protocol_message), 0, (struct sockaddr *)& game_nodes[0].net_addr, addr_len);
+    // print next gen
+    visualise_2DarrayNumbers((int*)area1_temp,node_area_rows,node_area_cols);
+
+
 
     close(server_socket);
 
