@@ -30,7 +30,7 @@ uint16_t measure;
 uint32_t timer;
 int area[5][6];
 int registered = 0;
-int received_conf = 0;
+
 
 void millis_delay(unsigned long delay){
 	unsigned long timer = ZsutMillis() + delay;
@@ -201,7 +201,6 @@ void loop(){
     int received_area = receive_area();
     if(received_area){
 
-        received_conf = 0;
         // copy received array to the one that will hold the state of the new generation
         int next_gen_area[5][6];
         memcpy(next_gen_area,area,5*6*sizeof(int));
@@ -216,29 +215,12 @@ void loop(){
         int written_bytes = write_to_buffer((int*)next_gen_area,5,6);
         Serial.println("[*]Prepared protocl buffer");
 
+        // send to server
+        Udp.beginPacket(serverIP,remotePort);
+        int area_updated = Udp.write(protocolBuffer, 48);
+        Udp.endPacket();
+        Serial.println("[*]Sent area update to server");
 
-
-        while(received_conf == 0){
-            // send to server
-            Udp.beginPacket(serverIP,remotePort);
-            int area_updated = Udp.write(protocolBuffer, 48);
-            Udp.endPacket();
-            Serial.println("[*]Sent area update to server");
-
-            millis_delay(200);
-            // wait for confirmation
-            int conf = Udp.parsePacket();
-            if(conf){
-                  int conf_packet = Udp.read(receiveBuffer,RECEIVE_BUFFER);
-                   if(receiveBuffer[0] == AREA_UPDATE_CODE){
-                        Serial.println("[*] Area update received successfully!");
-                        received_conf = 1;
-                    }
-
-            }
-
-        }
-        //received_conf = 0;
     }
 
 }
