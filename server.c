@@ -476,6 +476,7 @@ int main(){
     // send confirmation
     protocol_message[0] = AREA_UPDATE_CODE;
     sendto(server_socket, protocol_message, strlen(protocol_message), 0, (struct sockaddr *)& game_nodes[0].net_addr, addr_len);
+    printf("Sent confirmation!\n");
     // print next gen
     visualise_2DarrayNumbers((int*)area1_temp,node_area_rows,node_area_cols);
 

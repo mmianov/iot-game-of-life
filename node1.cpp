@@ -12,7 +12,7 @@
 #define REQUEST_BUFFER 1
 #define RECEIVE_BUFFER 10
 #define BOUNDARY_UPDATE_CODE  1<<0 | 1<<1 | 1<<2 | 1<<3
-#define AREA_UPDATE_CODE 1<<0 | 0<<1 | 1<<2 | 0<<3
+#define AREA_UPDATE_CODE 1<<3 | 0<<2 | 1<<1 | 0<<0
 // TODO: define protocol bits
 
 byte mac[] =  {0x01,0x43,0x09,0x67,0x89,0xab};
