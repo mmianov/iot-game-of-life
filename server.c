@@ -69,6 +69,9 @@ void visualise_2DarrayNumbers(int *array,int rows, int cols){
             else if(*((array + i*cols)+j) == 4){ //zmieniono na i*cols zamiast i*rows
                 printf("4");
             }
+            else if(*((array + i*cols)+j) == 0){ //zmieniono na i*cols zamiast i*rows
+                printf("0");
+            }
 //            else{
 //                printf("1");
 //            }
@@ -349,20 +352,20 @@ void reassemble_map(int*new_map,int *area1,int *area2,int *area3,int *area4){
     for(int i=0;i<map_rows;i++){
         for(int j=0;j<map_cols;j++){
             if(i < map_rows/2 && j < map_cols/2){
-                //*((new_map+i*map_cols)+j) = *((area1+(i+1)*node_area_cols)+(j+1)); // area1[i+1][j+1]
-                *((new_map+i*map_cols)+j) = 1;
+                *((new_map+i*map_cols)+j) = *((area1+(i+1)*node_area_cols)+(j+1)); // area1[i+1][j+1]
+
             }
             else if(i < map_rows/2 && j >= map_cols/2){
-                //*((new_map+i*map_cols)+j) = *((area2+(i+1)*node_area_cols)+(j+1));
-                 *((new_map+i*map_cols)+j) = 2;
+                *((new_map+i*map_cols)+j) = *((area2+(i+1)*node_area_cols)+(j+1));
+
             }
             else if(i >= map_rows/2 && j < map_cols/2){
-                //*((new_map+i*map_cols)+j) = *((area3+(i+1)*node_area_cols)+(j+1));
-                 *((new_map+i*map_cols)+j) = 3;
+                *((new_map+i*map_cols)+j) = *((area3+(i+1)*node_area_cols)+(j+1));
+
             }
             else if(i >= map_rows/2 && j >= map_cols/2){
-                //*((new_map+i*map_cols)+j) = *((area4+(i+1)*node_area_cols)+(j+1));
-                 *((new_map+i*map_cols)+j) = 4;
+                *((new_map+i*map_cols)+j) = *((area4+(i+1)*node_area_cols)+(j+1));
+
             }
         }
     }
@@ -475,6 +478,14 @@ int main(){
     int area4[node_area_rows][node_area_cols];
     divide_map((int*)area1,(int*)area2,(int*)area3,(int*)area4);
 
+    printf("Area 1:\n");
+    visualise_2DarrayNumbers((int*)area1,node_area_rows,node_area_cols);
+    printf("Area 2:\n");
+    visualise_2DarrayNumbers((int*)area2,node_area_rows,node_area_cols);
+    printf("Area 3:\n");
+    visualise_2DarrayNumbers((int*)area3,node_area_rows,node_area_cols);
+    printf("Area 4:\n");
+    visualise_2DarrayNumbers((int*)area4,node_area_rows,node_area_cols);
 
     int re_map[map_rows][map_cols];
     reassemble_map((int*)re_map,(int*)area1,(int*)area2,(int*)area3,(int*)area4);
