@@ -419,13 +419,12 @@ int main(){
     display_game_nodes(game_nodes,game_nodes_amount);
 
     memset(&protocol_message,0,sizeof(protocol_message));
-    //protocol_message[0] = BOUNDARY_UPDATE_CODE;
 
     //int *protocol_message_test = (int*) game_nodes[0].area;
-    char protocol_message[node_area_rows*node_area_cols];
+    char protocol_message[7];
     write_to_buffer(protocol_message,(int*)area1,node_area_rows,node_area_cols);
-    for(int i=0;i<node_area_rows*node_area_cols;i++){
-        printf("%c",protocol_message[i]);
+    for(int i=0;i<7;i++){
+        printf("%c\n",protocol_message[i]);
     }
 
 //    for(int i=0;i<node_area_rows*node_area_cols;i++){
