@@ -334,19 +334,22 @@ void divide_map(int *area1,int *area2,int *area3,int *area4){
 
 void reassemble_map(int*new_map,int *area1,int *area2,int *area3,int *area4){
 
+    // map_rows - wiersze mapy
+    // node_area_rows - wiersze z ramka
+    // area_rows - bez ramki
     for(int i=0;i<map_rows;i++){
         for(int j=0;j<map_cols;j++){
-            if(i < node_area_rows/2 && j < node_area_cols/2){
-                *((new_map+i*map_cols)+j) = *((area1+(i+1)*area_cols)+(j+1));
+            if(i < map_rows/2 && j < map_cols/2){
+                *((new_map+i*map_cols)+j) = *((area1+(i+1)*node_area_cols)+(j+1)); // area1[i+1][j+1]
             }
-            else if(i < node_area_rows/2 && j >= node_area_cols/2){
-                *((new_map+i*map_cols)+j) = *((area2+(i+1)*area_cols)+(j+1));
+            else if(i < map_rows/2 && j >= map_cols/2){
+                *((new_map+i*map_cols)+j) = *((area2+(i+1)*node_area_cols)+(j+1));
             }
-            else if(i >= node_area_rows/2 && j < node_area_cols/2){
-                *((new_map+i*map_cols)+j) = *((area3+(i+1)*area_cols)+(j+1));
+            else if(i >= map_rows/2 && j < map_cols/2){
+                *((new_map+i*map_cols)+j) = *((area3+(i+1)*node_area_cols)+(j+1));
             }
-            else if(i >= node_area_rows/2 && j >= node_area_cols/2){
-                *((new_map+i*map_cols)+j) = *((area4+(i+1)*area_cols)+(j+1));
+            else if(i >= map_rows/2 && j >= map_cols/2){
+                *((new_map+i*map_cols)+j) = *((area4+(i+1)*node_area_cols)+(j+1));
             }
         }
     }
