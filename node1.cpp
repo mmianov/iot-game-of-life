@@ -93,6 +93,27 @@ int receive_area(){
 
 }
 
+
+int countNeighbours(int *array,int rows, int cols, int x, int y){
+    int sum = 0;
+
+    for(int i =-1;i<2;i++){
+        for(int j=-1;j<2;j++){
+            // count live neighbours
+	        //int wrap_cols = (y+j+cols) % cols;
+            //int wrap_rows = (x+i+rows) % rows;
+            // not sure which one to go with yet
+            int wrap_j = (y+j+cols) % (cols);
+            int wrap_i = (x+i+rows) % (rows);
+            //sum = sum + *((array + rows*(x+i))+y+j);
+            sum = sum + *((array + cols*wrap_i)+wrap_j); // zmieniono na cols*wrap_rows
+        }
+    }
+    sum = sum - *((array + x*cols)+y); // zmieniono na x*cols + y
+    return sum;
+}
+
+
 // compute next generation of game of life
 void compute_game_of_life(int *arr,int *new_arr,int rows, int cols){
 
@@ -121,24 +142,7 @@ void compute_game_of_life(int *arr,int *new_arr,int rows, int cols){
     }
 }
 
-int countNeighbours(int *array,int rows, int cols, int x, int y){
-    int sum = 0;
 
-    for(int i =-1;i<2;i++){
-        for(int j=-1;j<2;j++){
-            // count live neighbours
-	        //int wrap_cols = (y+j+cols) % cols;
-            //int wrap_rows = (x+i+rows) % rows;
-            // not sure which one to go with yet
-            int wrap_j = (y+j+cols) % (cols);
-            int wrap_i = (x+i+rows) % (rows);
-            //sum = sum + *((array + rows*(x+i))+y+j);
-            sum = sum + *((array + cols*wrap_i)+wrap_j); // zmieniono na cols*wrap_rows
-        }
-    }
-    sum = sum - *((array + x*cols)+y); // zmieniono na x*cols + y
-    return sum;
-}
 
 void visualise_2DarrayNumbers(int *array,int rows, int cols){
     for(int i =0;i<rows;i++){
@@ -204,7 +208,7 @@ void loop(){
         memset(protocolBuffer,0,sizeof(protocolBuffer));
         // insert bits into buffer from server.c>
         int written_bytes = write_to_buffer((int*)next_gen_area,5,6);
-        Serial.println("[*]Prepared protocl buffer);
+        Serial.println("[*]Prepared protocl buffer");
 
         while(!received_conf){
             // send to server
