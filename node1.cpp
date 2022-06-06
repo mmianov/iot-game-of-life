@@ -210,7 +210,7 @@ void loop(){
         int written_bytes = write_to_buffer((int*)next_gen_area,5,6);
         Serial.println("[*]Prepared protocl buffer");
 
-        while(!received_conf){
+        while(received_conf == 0){
             // send to server
             Udp.beginPacket(serverIP,remotePort);
             int area_updated = Udp.write(protocolBuffer, 48);

@@ -470,7 +470,7 @@ int main(){
     memset(&protocol_message,0,sizeof(protocol_message));
     // receive are update from node
     game_nodes[0].net_addr = receive_data(protocol_message);
-    printf("Received area message");
+    printf("Received area message\n");
     // get area from buffer
     receive_from_buffer((int*)area1_temp,node_area_rows,node_area_cols);
     // send confirmation
