@@ -191,9 +191,9 @@ void loop(){
         if(register_node()){
             registered = 1;
         }
-        Serial.println("-------------------------------------")
-        Serial.println("[*] The game is about to begin ...")
-        Serial.println("-------------------------------------")
+        Serial.println("-------------------------------------");
+        Serial.println("[*] The game is about to begin ...");
+        Serial.println("-------------------------------------");
     }
 
     millis_delay(100);
