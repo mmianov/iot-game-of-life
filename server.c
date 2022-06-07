@@ -495,7 +495,7 @@ int main(){
     int res_map[map_rows][map_cols];
     memset(res_map,0,sizeof(res_map));
     reassemble_map((int*)res_map,(int*)area1_trimmed,(int*)area2_trimmed,(int*)area3_trimmed,(int*)area4_trimmed);
-    printf("Reassembled map: ");
+    printf("Reassembled map: \n");
     visualise_2DarrayNumbers((int*)res_map,map_rows,map_cols);
 
 //    memset(&protocol_message,0,sizeof(protocol_message));
