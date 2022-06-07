@@ -500,6 +500,7 @@ int main(){
 
      // send  values
     write_to_buffer((int*)area1,node_area_rows,node_area_cols);
+    printf("Wrote to buffer\n");
     sendto(server_socket, protocol_message, strlen(protocol_message), 0, (struct sockaddr *)&game_nodes[0].net_addr, addr_len);
     sleep(0.1);
     printf("Wyslano area 1 intial");
