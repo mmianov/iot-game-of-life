@@ -501,13 +501,13 @@ int main(){
     // send initial values
     write_to_buffer((int*)area1,node_area_rows,node_area_cols);
     sendto(server_socket, protocol_message, strlen(protocol_message), 0, (struct sockaddr *)&game_nodes[0].net_addr, addr_len);
-
+    delay(30);
     write_to_buffer((int*)area2,node_area_rows,node_area_cols);
     sendto(server_socket, protocol_message, strlen(protocol_message), 0, (struct sockaddr *)&game_nodes[1].net_addr, addr_len);
-
+    delay(30);
     write_to_buffer((int*)area3,node_area_rows,node_area_cols);
     sendto(server_socket, protocol_message, strlen(protocol_message), 0, (struct sockaddr *)&game_nodes[2].net_addr, addr_len);
-
+    delay(30);
     write_to_buffer((int*)area4,node_area_rows,node_area_cols);
     sendto(server_socket, protocol_message, strlen(protocol_message), 0, (struct sockaddr *)&game_nodes[3].net_addr, addr_len);
 
