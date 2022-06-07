@@ -522,7 +522,7 @@ int main(){
 
             write_to_buffer((int*)area4,node_area_rows,node_area_cols);
             sendto(server_socket, protocol_message, strlen(protocol_message), 0, (struct sockaddr *)&game_nodes[3].net_addr, addr_len);
-            printf("Sent values!\n;")
+            printf("Sent values!\n;");
         }
 
         // reset file descriptor sets and add server socket to watch list
@@ -555,29 +555,29 @@ int main(){
                   memcpy(area1_trimmed,temp_area_trimmed,sizeof(temp_area_trimmed));
                   // acknowledge that area 1 sent update
                   area1_recv = 1;
-                   printf("Received from node 1!\n;")
+                   printf("Received from node 1!\n;");
                }
                else if (current_node == 2){
                   memcpy(area2_trimmed,temp_area_trimmed,sizeof(temp_area_trimmed));
                   area2_recv = 1;
-                  printf("Received from node 2!\n;")
+                  printf("Received from node 2!\n;");
                }
                else if (current_node == 3){
                   memcpy(area3_trimmed,temp_area_trimmed,sizeof(temp_area_trimmed));
                   area3_recv = 1;
-                  printf("Received from node 3!\n;")
+                  printf("Received from node 3!\n;");
                }
                else if (current_node == 4){
                   memcpy(area4_trimmed,temp_area_trimmed,sizeof(temp_area_trimmed));
                   area4_recv = 1;
-                  printf("Received from node 4!\n;")
+                  printf("Received from node 4!\n;");
                }
             }
         }
         // if all areas are calculated (updated)
         if(area1_recv && area2_recv && area3_recv && area4_recv ){
 
-            printf("All areas received!\n;")
+            printf("All areas received!\n;");
             // reassemble map
             int res_map[map_rows][map_cols];
             memset(res_map,0,sizeof(res_map));
