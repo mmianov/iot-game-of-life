@@ -517,7 +517,7 @@ int main(){
     int area3_recv = 0;
     int area4_recv = 0;
 
-
+    fd_set read_fds;
     for(;;){
 
         // reset file descriptor sets and add server socket to watch list
@@ -551,15 +551,15 @@ int main(){
                   // acknowledge that area 1 sent update
                   area1_recv = 1;
                }
-               else if (current_node == 2{
+               else if (current_node == 2){
                   memcpy(area2_trimmed,temp_area_trimmed,sizeof(temp_area_trimmed));
                   area2_recv = 1;
                }
-               else if (current_node == 3{
+               else if (current_node == 3){
                   memcpy(area3_trimmed,temp_area_trimmed,sizeof(temp_area_trimmed));
                   area3_recv = 1;
                }
-               else if (current_node == 4{
+               else if (current_node == 4){
                   memcpy(area4_trimmed,temp_area_trimmed,sizeof(temp_area_trimmed));
                   area4_recv = 1;
                }
