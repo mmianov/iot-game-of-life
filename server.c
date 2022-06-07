@@ -561,7 +561,7 @@ int main(){
             // play animation
             system("clear");
             visualise_2DarrayNumbers((int*)map,map_rows,map_cols);
-             printf("All areas received! (%d)\n",debug);
+             printf("All areas received! (Generation: %d)\n",debug);
             debug++;
             sleep(1);
             //divide the map again
