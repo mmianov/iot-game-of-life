@@ -559,9 +559,9 @@ int main(){
             // copy to global map variable
             memcpy(map,res_map,sizeof(res_map));
             // play animation
+            system("clear");
             visualise_2DarrayNumbers((int*)map,map_rows,map_cols);
             sleep(1);
-            system("clear");
             //divide the map again
             divide_map((int*)area1,(int*)area2,(int*)area3,(int*)area4,0);
 
