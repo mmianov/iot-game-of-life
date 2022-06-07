@@ -588,10 +588,10 @@ int main(){
             //printf("Sending new values!");
 
             // reset flags
-            int area1_recv = 0;
-            int area2_recv = 0;
-            int area3_recv = 0;
-            int area4_recv = 0;
+            area1_recv = 0;
+            area2_recv = 0;
+            area3_recv = 0;
+            area4_recv = 0;
         }
     }
 
