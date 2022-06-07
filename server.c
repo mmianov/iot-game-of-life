@@ -498,7 +498,7 @@ int main(){
     // divide the map with initial random values
     divide_map((int*)area1,(int*)area2,(int*)area3,(int*)area4,1);
 
-      send  values
+     //send  values
     write_to_buffer((int*)area1,node_area_rows,node_area_cols);
     printf("Wrote to buffer\n");
     if(sendto(server_socket, protocol_message, strlen(protocol_message), 0, (struct sockaddr *)&game_nodes[0].net_addr, addr_len) == -1){
