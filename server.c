@@ -552,7 +552,6 @@ int main(){
         }
         // if all areas are calculated (updated)
         if(area1_recv && area2_recv && area3_recv && area4_recv ){
-            printf("All areas received! (%d)\n",debug);
             // reassemble map
             int res_map[map_rows][map_cols];
             memset(res_map,0,sizeof(res_map));
@@ -560,8 +559,10 @@ int main(){
             // copy to global map variable
             memcpy(map,res_map,sizeof(res_map));
             // play animation
-            //system("clear");
+            system("clear");
             visualise_2DarrayNumbers((int*)map,map_rows,map_cols);
+             printf("All areas received! (%d)\n",debug);
+            debug++;
             sleep(1);
             //divide the map again
             divide_map((int*)area1,(int*)area2,(int*)area3,(int*)area4,0);
