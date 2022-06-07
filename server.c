@@ -20,7 +20,7 @@
 #define AREA_UPDATE 2
 #define GAME_STATE_REGISTER_CONFIRM 0<<0 | 0<<1 | 0<<2 | 1<<3
 #define BOUNDARY_UPDATE_CODE  1<<0 | 1<<1 | 1<<2 | 1<<3
-#define AREA_UPDATE_CODE 1<<0 | 0<<1 | 1<<2 | 0<<3
+#define AREA_UPDATE_CODE 1<<3 | 0<<2 | 1<<1 | 0<<0
 
 
 int server_socket;
@@ -478,7 +478,7 @@ int main(){
     game_nodes[1].area =(int**)area2;
     game_nodes[2].area =(int**)area3;
     game_nodes[3].area =(int**)area4;
-    display_game_nodes(game_nodes,game_nodes_amount);
+    //display_game_nodes(game_nodes,game_nodes_amount);
 
     // prepare placeholders for areas without frame
     int area1_trimmed[area_rows][area_cols];
@@ -502,12 +502,15 @@ int main(){
     write_to_buffer((int*)area1,node_area_rows,node_area_cols);
     sendto(server_socket, protocol_message, strlen(protocol_message), 0, (struct sockaddr *)&game_nodes[0].net_addr, addr_len);
 
+    memset(&protocol_message,0,sizeof(protocol_message));
     write_to_buffer((int*)area2,node_area_rows,node_area_cols);
     sendto(server_socket, protocol_message, strlen(protocol_message), 0, (struct sockaddr *)&game_nodes[1].net_addr, addr_len);
 
+    memset(&protocol_message,0,sizeof(protocol_message));
     write_to_buffer((int*)area3,node_area_rows,node_area_cols);
     sendto(server_socket, protocol_message, strlen(protocol_message), 0, (struct sockaddr *)&game_nodes[2].net_addr, addr_len);
 
+    memset(&protocol_message,0,sizeof(protocol_message));
     write_to_buffer((int*)area4,node_area_rows,node_area_cols);
     sendto(server_socket, protocol_message, strlen(protocol_message), 0, (struct sockaddr *)&game_nodes[3].net_addr, addr_len);
 
@@ -520,7 +523,7 @@ int main(){
     fd_set read_fds;
     for(;;){
 
-
+        printf("Waiting ...");
         // reset file descriptor sets and add server socket to watch list
         FD_ZERO(&read_fds);
         FD_SET(server_socket,&read_fds);
