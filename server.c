@@ -537,7 +537,7 @@ int main(){
 
     for(;;){
 
-        printf("Waiting ...");
+        //printf("Waiting ...");
         // reset file descriptor sets and add server socket to watch list
         FD_ZERO(&read_fds);
         FD_SET(server_socket,&read_fds);
