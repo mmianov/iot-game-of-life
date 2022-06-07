@@ -488,10 +488,10 @@ int main(){
         receive_from_buffer((int*)area1_temp,node_area_rows,node_area_cols);
 
         // print next gen
-        system("clear");
+
         visualise_2Darray((int*)area1_temp,node_area_rows,node_area_cols);
         sleep(1.5);
-
+        system("clear");
         // the line below is for simulating 1 node game of life - noramlly it would have to be written to map without frames, then divided again and resent
         write_to_buffer((int*)area1_temp,node_area_rows,node_area_cols);
         sendto(server_socket, protocol_message, strlen(protocol_message), 0, (struct sockaddr *)&game_nodes[0].net_addr, addr_len);
