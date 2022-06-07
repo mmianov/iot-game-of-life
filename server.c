@@ -156,9 +156,7 @@ int handle_message(char *message){
    if (first_bit == 0 && second_bit == 0 && third_bit == 0 && fourth_bit == 1){
         return GAME_STATE_REGISTER;
    }
-   else if (first_bit == 1 && second_bit == 0 && third_bit == 1 && fourth_bit== 0){
-        return AREA_UPDATE;
-   }
+
    else return -1;
 }
 
