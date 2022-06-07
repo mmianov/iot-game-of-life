@@ -462,6 +462,10 @@ int main(){
     int area4[node_area_rows][node_area_cols];
     divide_map((int*)area1,(int*)area2,(int*)area3,(int*)area4);
     int area1_temp[node_area_rows][node_area_cols];
+
+    // send initial area
+    sendto(server_socket, protocol_message, strlen(protocol_message), 0, (struct sockaddr *)&game_nodes[0].net_addr, addr_len);
+
     memset(&protocol_message,0,sizeof(protocol_message));
     // receive area update from node
     game_nodes[0].net_addr = receive_data(protocol_message);
