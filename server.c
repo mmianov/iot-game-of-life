@@ -349,32 +349,6 @@ void reassemble_map(int*new_map,int *area1,int *area2,int *area3,int *area4){
 }
 
 
-//void reassemble_map(int*new_map,int *area1,int *area2,int *area3,int *area4){
-//
-//    // map_rows - wiersze mapy
-//    // node_area_rows - wiersze z ramka
-//    // area_rows - bez ramki
-//
-//    // DLA WSZYSTKICH MUSI I ZACZYNAC SIE OD ZERA - DOCHODZI DO DRUGIEGO NODA ALE NIE BIERZE GO OD 0 TYLKO OD 0 = 5 NP.
-//    for(int i=0;i<map_rows;i++){
-//        for(int j=0;j<map_cols;j++){
-//            if(i < map_rows/2 && j < map_cols/2){
-//                *((new_map+i*map_cols)+j) = *((area1+i*area_cols)+j);
-//            }
-//            else if(i < map_rows/2 && j >= map_cols/2){
-//                *((new_map+i*map_cols)+j) = *((area2+(i)*area_cols)+j);
-//            }
-//            else if(i >= map_rows/2 && j < map_cols/2){
-//                *((new_map+i*map_cols)+j) = *((area3+i*area_cols)+j);
-//            }
-//            else if(i >= map_rows/2 && j >= map_cols/2){
-//                *((new_map+i*map_cols)+j) = *((area4+i*area_cols)+j);
-//            }
-//        }
-//    }
-//}
-
-
 void trim_area(int*frame_area,int *area){
     for(int i=0;i<area_rows;i++){
         for(int j=0;j<area_cols;j++){
