@@ -530,6 +530,7 @@ int main(){
     int area4_recv = 0;
 
     fd_set read_fds;
+    printf("Przed for\n");
     for(;;){
 
         printf("Waiting ...");
