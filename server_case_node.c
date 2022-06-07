@@ -490,7 +490,7 @@ int main(){
         // print next gen
 
         visualise_2Darray((int*)area1_temp,node_area_rows,node_area_cols);
-        sleep(1);
+        sleep(1.5);
         system("clear");
         // the line below is for simulating 1 node game of life - noramlly it would have to be written to map without frames, then divided again and resent
         write_to_buffer((int*)area1_temp,node_area_rows,node_area_cols);
