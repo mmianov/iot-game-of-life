@@ -16,21 +16,20 @@
 #define SERVER_PORT 17210
 #define MAX_MSG_SIZE 50
 #define MAX_NODES 8
-#define GAME_STATE_REGISTER 1
-#define AREA_UPDATE 2
+
+#define GAME_STATE_REGISTER 1 // check in function
 #define GAME_STATE_REGISTER_CONFIRM 0<<0 | 0<<1 | 0<<2 | 1<<3
 #define BOUNDARY_UPDATE_CODE  1<<0 | 1<<1 | 1<<2 | 1<<3
 #define AREA_UPDATE_CODE 1<<3 | 0<<2 | 1<<1 | 0<< 0
 
 
 int server_socket;
-
 struct sockaddr_in node_addr; // variable to perform operations on nodes
 struct sockaddr_in nodes[MAX_NODES]; // variable to hold nodes in registration period
 int addr_len = sizeof(struct sockaddr_in);
 
 char received_message[MAX_MSG_SIZE]; // received message
-char protocol_message[5];
+char protocol_message[5]; // ALP message
 
 
 // structure to hold information about nodes in the game
@@ -55,6 +54,8 @@ int map[6][8];
 
 // --- GAME NODES FUNCTIONS ---
 
+
+// visualises 2D array
 void visualise_2DarrayNumbers(int *array,int rows, int cols){
     for(int i =0;i<rows;i++){
         for(int j=0;j<cols;j++){
@@ -86,6 +87,8 @@ void create_game_nodes(struct game_node *game_nodes, int game_nodes_amount){
     }
 }
 
+
+// displays game nodees
 void display_game_nodes(struct game_node *game_nodes,int game_nodes_amount){
     for(int i=0;i<game_nodes_amount;i++){
         printf("---------------------------------\n\r");
@@ -130,6 +133,7 @@ int initialize_server(int *server_socket,int port){
     return 1;
 }
 
+
 // receives data on server socket
 struct sockaddr_in receive_data(char *message){
     // clear buffer
@@ -140,10 +144,10 @@ struct sockaddr_in receive_data(char *message){
     return node_addr;
 }
 
+
 int handle_message(char *message){
 
-   // TODO : Maybe change to only 2 first bits and payload?
-   // check codename and argument bits (intentionally verbose, to see the ALP)
+   // check codename
    int first_bit = (message[0] >> 0) & 1;
    int second_bit = (message[0] >> 1) & 1;
    int third_bit = (message[0] >> 2) & 1;
@@ -159,6 +163,7 @@ int handle_message(char *message){
 }
 
 
+// check if node is already registered
 int is_registered(struct sockaddr_in node, int nodes_to_connect){
     for(int i=0;i<nodes_to_connect;i++){
         // check if node IP address is already in possible_nodes set
@@ -212,12 +217,14 @@ int open_registration(){
             }
     }
     // set global variable
-    game_nodes_amount = nodes_to_connect; // todo: maybe change to global variable only?
+    game_nodes_amount = nodes_to_connect;
     return 1;
 }
 
+
 // --- GAME OF LIFE FUNCTIONS ---
 
+// fils 2D array with random values
 void fill2DArray(int *array,int rows, int cols){
     srand(time(0));
     int num_of_ones = 0;
@@ -226,17 +233,19 @@ void fill2DArray(int *array,int rows, int cols){
         for(int j=0;j<cols;j++){
             int rand_val = rand()%2;
             if(rand_val == 1 && num_of_ones*2 < num_of_zeros){
-                          *((array+i*cols)+j) = rand_val; // zmieniono na i*cols zamiast i*rows
+                          *((array+i*cols)+j) = rand_val;
                           num_of_ones++;
                         }
             else{
-                 *((array+i*cols)+j) = 0; // zmieniono na i*cols zamiast i*rows
+                 *((array+i*cols)+j) = 0;
                   num_of_zeros++;
             }
         }
     }
 }
 
+
+// visualizes 2D array
 void visualise_2Darray(int *array,int rows, int cols){
     for(int i =0;i<rows;i++){
         for(int j=0;j<cols;j++){
@@ -246,30 +255,25 @@ void visualise_2Darray(int *array,int rows, int cols){
             else{
                 printf("*");
             }
-
         }
         printf("\n");
     }
 }
 
 
-
+// counts neighbours of a cell in game of life
 int countNeighbours(int *array,int rows, int cols, int x, int y){
     int sum = 0;
 
     for(int i =-1;i<2;i++){
         for(int j=-1;j<2;j++){
             // count live neighbours
-	        //int wrap_cols = (y+j+cols) % cols;
-            //int wrap_rows = (x+i+rows) % rows;
-            // not sure which one to go with yet
             int wrap_j = (y+j+cols) % (cols);
             int wrap_i = (x+i+rows) % (rows);
-            //sum = sum + *((array + rows*(x+i))+y+j);
-            sum = sum + *((array + cols*wrap_i)+wrap_j); // zmieniono na cols*wrap_rows
+            sum = sum + *((array + cols*wrap_i)+wrap_j);
         }
     }
-    sum = sum - *((array + x*cols)+y); // zmieniono na x*cols + y
+    sum = sum - *((array + x*cols)+y);
     return sum;
 }
 
@@ -277,20 +281,11 @@ int countNeighbours(int *array,int rows, int cols, int x, int y){
 // divides map according to amount of nodes in game and possible map size
 void divide_map(int *area1,int *area2,int *area3,int *area4,int initial){
 
-    //int map[map_rows][map_cols]; // changed to global
-    //memset(map,0,sizeof(map));
     if(initial){
         fill2DArray((int*)map,map_rows,map_cols);
     }
 
-    //printf("Original map: \n");
-    //visualise_2DarrayNumbers((int*)map,map_rows,map_cols);
-    //sleep(2);
-
     int temp_area[node_area_rows][node_area_cols]; // area for calculations
-
-    // define adjusting cols and rows for each area
-    // [n - area][1 - rows, 0 - cols]
     int area_adjust[4][2];
 
     area_adjust[0][1] = 0;
@@ -326,13 +321,9 @@ void divide_map(int *area1,int *area2,int *area3,int *area4,int initial){
 }
 
 
+// reassembles map from areas
 void reassemble_map(int*new_map,int *area1,int *area2,int *area3,int *area4){
 
-    // map_rows - wiersze mapy
-    // node_area_rows - wiersze z ramka
-    // area_rows - bez ramki
-
-    // DLA WSZYSTKICH MUSI I ZACZYNAC SIE OD ZERA - DOCHODZI DO DRUGIEGO NODA ALE NIE BIERZE GO OD 0 TYLKO OD 0 = 5 NP.
     for(int i=0;i<map_rows;i++){
         for(int j=0;j<map_cols;j++){
             if(i < map_rows/2 && j < map_cols/2){
@@ -352,6 +343,7 @@ void reassemble_map(int*new_map,int *area1,int *area2,int *area3,int *area4){
 }
 
 
+// trims area from frame
 void trim_area(int*frame_area,int *area){
     for(int i=0;i<area_rows;i++){
         for(int j=0;j<area_cols;j++){
@@ -360,7 +352,7 @@ void trim_area(int*frame_area,int *area){
 }
 }
 
-
+// computes next generation of game of life
 void compute_game_of_life(int *arr,int *new_arr,int rows, int cols){
 
     // iterate over array
@@ -389,6 +381,7 @@ void compute_game_of_life(int *arr,int *new_arr,int rows, int cols){
 }
 
 
+// writes from array to ALP buffer
 int write_to_buffer(int *area, int rows, int cols){
     protocol_message[0] = BOUNDARY_UPDATE_CODE;
     int bytes = 1;
@@ -406,6 +399,8 @@ int write_to_buffer(int *area, int rows, int cols){
     return bytes;
 }
 
+
+// write from ALP buffer to area array
 int receive_from_buffer(int *area, int rows, int cols){
 
     int shift = 0;
@@ -471,30 +466,29 @@ int main(){
     // divide the map with initial random values
     divide_map((int*)area1,(int*)area2,(int*)area3,(int*)area4,1);
 
-     //send  values
+    //send  values
     write_to_buffer((int*)area1,node_area_rows,node_area_cols);
-    printf("Wrote to buffer\n");
     if(sendto(server_socket, protocol_message, strlen(protocol_message), 0, (struct sockaddr *)&game_nodes[0].net_addr, addr_len) == -1){
         printf("ERROR %s (%s:%d) \n", strerror(errno));
     }
-    printf("Wyslano area 1 intial");
 
     memset(&protocol_message,0,sizeof(protocol_message));
     write_to_buffer((int*)area2,node_area_rows,node_area_cols);
     if(sendto(server_socket, protocol_message, strlen(protocol_message), 0, (struct sockaddr *)&game_nodes[1].net_addr, addr_len) == -1){
         printf("ERROR %s (%s:%d) \n", strerror(errno));
     }
-    printf("Wyslano area 2 intial");
 
     memset(&protocol_message,0,sizeof(protocol_message));
     write_to_buffer((int*)area3,node_area_rows,node_area_cols);
-    sendto(server_socket, protocol_message, strlen(protocol_message), 0, (struct sockaddr *)&game_nodes[2].net_addr, addr_len);
+    if(sendto(server_socket, protocol_message, strlen(protocol_message), 0, (struct sockaddr *)&game_nodes[2].net_addr, addr_len) == -1){
+        printf("ERROR %s (%s:%d) \n", strerror(errno));
+    }
 
-    printf("Wyslano area 3 intial");
     memset(&protocol_message,0,sizeof(protocol_message));
     write_to_buffer((int*)area4,node_area_rows,node_area_cols);
-    sendto(server_socket, protocol_message, strlen(protocol_message), 0, (struct sockaddr *)&game_nodes[3].net_addr, addr_len);
-    printf("Wyslano area 4 intial");
+    if(sendto(server_socket, protocol_message, strlen(protocol_message), 0, (struct sockaddr *)&game_nodes[3].net_addr, addr_len)==-1){
+        printf("ERROR %s (%s:%d) \n", strerror(errno));
+    }
 
     int area1_recv = 0;
     int area2_recv = 0;
@@ -502,15 +496,12 @@ int main(){
     int area4_recv = 0;
 
     fd_set read_fds;
-    printf("Przed for\n");
     struct timeval timeout;
     timeout.tv_sec = 0;
     timeout.tv_usec = 1000;
 
-
     for(;;){
 
-        //printf("Waiting ...");
         // reset file descriptor sets and add server socket to watch list
         FD_ZERO(&read_fds);
         FD_SET(server_socket,&read_fds);
@@ -522,7 +513,7 @@ int main(){
             memset(&node_addr,0,sizeof(node_addr));
             node_addr = receive_data(received_message);
 
-            // find which node connected - node with id 1 will always be responsible for calculating area 1
+            // find which node connected
             int current_node = 0;
              for(int i=0;i<game_nodes_amount;i++){
                 if(game_nodes[i].net_addr.sin_addr.s_addr == node_addr.sin_addr.s_addr){
@@ -541,29 +532,28 @@ int main(){
                   memcpy(area1_trimmed,temp_area_trimmed,sizeof(temp_area_trimmed));
                   // acknowledge that area 1 sent update
                   area1_recv = 1;
-                   printf("Received from node 1!\n;");
+                   //printf("Received from node 1!\n;");
                }
                else if (current_node == 2){
                   memcpy(area2_trimmed,temp_area_trimmed,sizeof(temp_area_trimmed));
                   area2_recv = 1;
-                  printf("Received from node 2!\n;");
+                  //printf("Received from node 2!\n;");
                }
                else if (current_node == 3){
                   memcpy(area3_trimmed,temp_area_trimmed,sizeof(temp_area_trimmed));
                   area3_recv = 1;
-                  printf("Received from node 3!\n;");
+                  //printf("Received from node 3!\n;");
                }
                else if (current_node == 4){
                   memcpy(area4_trimmed,temp_area_trimmed,sizeof(temp_area_trimmed));
                   area4_recv = 1;
-                  printf("Received from node 4!\n;");
+                  //printf("Received from node 4!\n;");
                }
             }
         }
         // if all areas are calculated (updated)
         if(area1_recv && area2_recv && area3_recv && area4_recv ){
-
-            printf("All areas received!\n;");
+            //printf("All areas received!\n;");
             // reassemble map
             int res_map[map_rows][map_cols];
             memset(res_map,0,sizeof(res_map));
@@ -579,19 +569,27 @@ int main(){
 
             //resend areas
             write_to_buffer((int*)area1,node_area_rows,node_area_cols);
-            sendto(server_socket, protocol_message, strlen(protocol_message), 0, (struct sockaddr *)&game_nodes[0].net_addr, addr_len);
+            if(sendto(server_socket, protocol_message, strlen(protocol_message), 0, (struct sockaddr *)&game_nodes[0].net_addr, addr_len) == -1){
+                printf("ERROR %s (%s:%d) \n", strerror(errno));
+            }
 
             write_to_buffer((int*)area2,node_area_rows,node_area_cols);
-            sendto(server_socket, protocol_message, strlen(protocol_message), 0, (struct sockaddr *)&game_nodes[1].net_addr, addr_len);
+            if(sendto(server_socket, protocol_message, strlen(protocol_message), 0, (struct sockaddr *)&game_nodes[1].net_addr, addr_len)==-1){
+                printf("ERROR %s (%s:%d) \n", strerror(errno));
+            }
 
             write_to_buffer((int*)area3,node_area_rows,node_area_cols);
-            sendto(server_socket, protocol_message, strlen(protocol_message), 0, (struct sockaddr *)&game_nodes[2].net_addr, addr_len);
+            if(sendto(server_socket, protocol_message, strlen(protocol_message), 0, (struct sockaddr *)&game_nodes[2].net_addr, addr_len)==-1){
+                printf("ERROR %s (%s:%d) \n", strerror(errno));
+            }
 
             write_to_buffer((int*)area4,node_area_rows,node_area_cols);
-            sendto(server_socket, protocol_message, strlen(protocol_message), 0, (struct sockaddr *)&game_nodes[3].net_addr, addr_len);
-            printf("Sending new values!");
-            // reset flags
+            if(sendto(server_socket, protocol_message, strlen(protocol_message), 0, (struct sockaddr *)&game_nodes[3].net_addr, addr_len)==-1){
+                printf("ERROR %s (%s:%d) \n", strerror(errno));
+            }
+            //printf("Sending new values!");
 
+            // reset flags
             int area1_recv = 0;
             int area2_recv = 0;
             int area3_recv = 0;
@@ -600,19 +598,4 @@ int main(){
     }
 
     close(server_socket);
-
-
-
-
-    // TODO 1. zmienić area1 na game_node[0].area w write_to_buffer
-    // TODO 2. odebrać wiadomość po stronie node'a, wpisać do tablicy, policzyć next_gen, - DONE
-    // wpisać bajt po bajcie do tablicy, odesłać
-    // TODO 3. odebrać na serwerze tablice od node'a, wpisac wartosci w odpowiednie miejsca na glownej mapie,
-    // bez ramki
-    // TODO 4. synchronizacja 4 hostów: rozesłać grę, czekać na odpowiedź, wyświetlić mapę, rozesłać nową gre itp.
-    // TODO5 ! Dodać obsługę rozłączenia node gdy za długo nie odeśle area
-    // TODO6 ! gra w zycie na granicy mapy
-    // Kwestia do zastanowienia: potwierdzenie odbioru
-
-
 }
