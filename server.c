@@ -471,16 +471,22 @@ int main(){
 
     int area1_trimmed[area_rows][area_cols];
     memset(area1_trimmed,0,sizeof(area1_trimmed));
+    int area2_trimmed[area_rows][area_cols];
+    memset(area2_trimmed,0,sizeof(area1_trimmed));
+    int area3_trimmed[area_rows][area_cols];
+    memset(area3_trimmed,0,sizeof(area1_trimmed));
+    int area4_trimmed[area_rows][area_cols];
+    memset(area4_trimmed,0,sizeof(area1_trimmed));
 
-//    for(int i=1;i<area_rows-1;i++){
-//        for(int j=1;j<area_cols-1;j++){
-//           area1_trimmed[i][j] = area1[i][j];//*((area1+i*node_area_cols)+j);
-//    }
-//}
 
     trim_area((int*)area1,(int*)area1_trimmed);
-
+    trim_area((int*)area2,(int*)area2_trimmed);
+    trim_area((int*)area3,(int*)area3_trimmed);
+    trim_area((int*)area4,(int*)area4_trimmed);
     visualise_2DarrayNumbers((int*)area1_trimmed,area_rows,area_cols);
+    visualise_2DarrayNumbers((int*)area2_trimmed,area_rows,area_cols);
+    visualise_2DarrayNumbers((int*)area3_trimmed,area_rows,area_cols);
+    visualise_2DarrayNumbers((int*)area4_trimmed,area_rows,area_cols);
 
 //    memset(&protocol_message,0,sizeof(protocol_message));
 //
