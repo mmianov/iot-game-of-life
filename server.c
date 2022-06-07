@@ -560,7 +560,7 @@ int main(){
             // copy to global map variable
             memcpy(map,res_map,sizeof(res_map));
             // play animation
-            system("clear");
+            //system("clear");
             visualise_2DarrayNumbers((int*)map,map_rows,map_cols);
             sleep(1);
             //divide the map again
