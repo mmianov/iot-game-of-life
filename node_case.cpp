@@ -29,7 +29,9 @@ unsigned char protocolBuffer[PROTOCOL_BUFFER];
 
 uint16_t measure;
 uint32_t timer;
-int area[12][17];
+const int ROWS = 12;
+const int COLS = 17;
+int area[ROWS][COLS];
 int registered = 0;
 
 
@@ -71,12 +73,12 @@ int receive_area(){
     int recv_packet = Udp.parsePacket();
     if(recv_packet){
         if(receiveBuffer[0] == BOUNDARY_UPDATE_CODE){
-            int read_packet = Udp.read(protocolBuffer,10);
+            int read_packet = Udp.read(protocolBuffer,PROTOCOL_BUFFER);
              Serial.print("[*]Received boundary update message!\n");
              int shift = 0;
              int bytes = 1;
-             for(int i=0;i<12;i++){
-                for(int j=0;j<17;j++){
+             for(int i=0;i<ROWS;i++){
+                for(int j=0;j<COLS;j++){
                    if(shift == 8){
                       shift = 0;
                       bytes++;
@@ -202,17 +204,17 @@ void loop(){
     if(received_area){
 
         // copy received array to the one that will hold the state of the new generation
-        int next_gen_area[12][17];
-        memcpy(next_gen_area,area,12*17*sizeof(int));
+        int next_gen_area[ROWS][COLS];
+        memcpy(next_gen_area,area,ROWS*COLS*sizeof(int));
 
         // compute next generation
-        compute_game_of_life((int*)area,(int*)next_gen_area,12,17);
+        compute_game_of_life((int*)area,(int*)next_gen_area,ROWS,COLS);
         Serial.println("[*]Computed game of life");
 
         // insert into protcol buffer
         memset(protocolBuffer,0,sizeof(protocolBuffer));
         // insert bits into buffer
-        int written_bytes = write_to_buffer((int*)next_gen_area,12,17);
+        int written_bytes = write_to_buffer((int*)next_gen_area,ROWS,COLS);
         Serial.println("[*]Prepared protocol buffer");
 
         // send to server
