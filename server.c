@@ -470,6 +470,7 @@ int main(){
     display_game_nodes(game_nodes,game_nodes_amount);
 
     int area1_trimmed[area_rows][area_cols];
+    memset(area1_trimmed,0,sizeof(area1_trimmed));
     trim_area((int*)area1,(int*)area1_trimmed);
 
     visualise_2DarrayNumbers((int*)area1_trimmed,area_rows,area_cols);
