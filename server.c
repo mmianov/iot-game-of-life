@@ -501,13 +501,15 @@ int main(){
      // send  values
     write_to_buffer((int*)area1,node_area_rows,node_area_cols);
     printf("Wrote to buffer\n");
-    sendto(server_socket, protocol_message, strlen(protocol_message), 0, (struct sockaddr *)&game_nodes[0].net_addr, addr_len);
+    if(sendto(server_socket, protocol_message, strlen(protocol_message), 0, (struct sockaddr *)&game_nodes[0].net_addr, addr_len) == -1){
+        printf("ERROR %s (%s:%d) \n", strerror(errno));
+    }
     sleep(0.1);
     printf("Wyslano area 1 intial");
 
     memset(&protocol_message,0,sizeof(protocol_message));
     write_to_buffer((int*)area2,node_area_rows,node_area_cols);
-    if(sendto(server_socket, protocol_message, strlen(protocol_message), 0, (struct sockaddr *)&game_nodes[1].net_addr, addr_len) <0){
+    if(sendto(server_socket, protocol_message, strlen(protocol_message), 0, (struct sockaddr *)&game_nodes[1].net_addr, addr_len) == -1){
         printf("ERROR %s (%s:%d) \n", strerror(errno));
     }
     printf("Wyslano area 2 intial");
