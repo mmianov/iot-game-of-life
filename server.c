@@ -498,6 +498,18 @@ int main(){
     // divide the map with initial random values
     divide_map((int*)area1,(int*)area2,(int*)area3,(int*)area4,1);
 
+     // send  values
+    write_to_buffer((int*)area1,node_area_rows,node_area_cols);
+    sendto(server_socket, protocol_message, strlen(protocol_message), 0, (struct sockaddr *)&game_nodes[0].net_addr, addr_len);
+
+    write_to_buffer((int*)area2,node_area_rows,node_area_cols);
+    sendto(server_socket, protocol_message, strlen(protocol_message), 0, (struct sockaddr *)&game_nodes[1].net_addr, addr_len);
+
+    write_to_buffer((int*)area3,node_area_rows,node_area_cols);
+    sendto(server_socket, protocol_message, strlen(protocol_message), 0, (struct sockaddr *)&game_nodes[2].net_addr, addr_len);
+
+    write_to_buffer((int*)area4,node_area_rows,node_area_cols);
+    sendto(server_socket, protocol_message, strlen(protocol_message), 0, (struct sockaddr *)&game_nodes[3].net_addr, addr_len);
 
 
     int area1_recv = 0;
@@ -508,22 +520,6 @@ int main(){
     fd_set read_fds;
     for(;;){
 
-        if(!area1_recv && !area2_recv && !area3_recv && !area4_recv ){
-
-            // send  values
-            write_to_buffer((int*)area1,node_area_rows,node_area_cols);
-            sendto(server_socket, protocol_message, strlen(protocol_message), 0, (struct sockaddr *)&game_nodes[0].net_addr, addr_len);
-
-            write_to_buffer((int*)area2,node_area_rows,node_area_cols);
-            sendto(server_socket, protocol_message, strlen(protocol_message), 0, (struct sockaddr *)&game_nodes[1].net_addr, addr_len);
-
-            write_to_buffer((int*)area3,node_area_rows,node_area_cols);
-            sendto(server_socket, protocol_message, strlen(protocol_message), 0, (struct sockaddr *)&game_nodes[2].net_addr, addr_len);
-
-            write_to_buffer((int*)area4,node_area_rows,node_area_cols);
-            sendto(server_socket, protocol_message, strlen(protocol_message), 0, (struct sockaddr *)&game_nodes[3].net_addr, addr_len);
-            printf("Sent values!\n;");
-        }
 
         // reset file descriptor sets and add server socket to watch list
         FD_ZERO(&read_fds);
@@ -591,19 +587,19 @@ int main(){
             //divide the map again
             divide_map((int*)area1,(int*)area2,(int*)area3,(int*)area4,0);
 
-            // resend areas
-//            write_to_buffer((int*)area1,node_area_rows,node_area_cols);
-//            sendto(server_socket, protocol_message, strlen(protocol_message), 0, (struct sockaddr *)&game_nodes[0].net_addr, addr_len);
-//
-//            write_to_buffer((int*)area2,node_area_rows,node_area_cols);
-//            sendto(server_socket, protocol_message, strlen(protocol_message), 0, (struct sockaddr *)&game_nodes[1].net_addr, addr_len);
-//
-//            write_to_buffer((int*)area3,node_area_rows,node_area_cols);
-//            sendto(server_socket, protocol_message, strlen(protocol_message), 0, (struct sockaddr *)&game_nodes[2].net_addr, addr_len);
-//
-//            write_to_buffer((int*)area4,node_area_rows,node_area_cols);
-//            sendto(server_socket, protocol_message, strlen(protocol_message), 0, (struct sockaddr *)&game_nodes[3].net_addr, addr_len);
+            //resend areas
+            write_to_buffer((int*)area1,node_area_rows,node_area_cols);
+            sendto(server_socket, protocol_message, strlen(protocol_message), 0, (struct sockaddr *)&game_nodes[0].net_addr, addr_len);
 
+            write_to_buffer((int*)area2,node_area_rows,node_area_cols);
+            sendto(server_socket, protocol_message, strlen(protocol_message), 0, (struct sockaddr *)&game_nodes[1].net_addr, addr_len);
+
+            write_to_buffer((int*)area3,node_area_rows,node_area_cols);
+            sendto(server_socket, protocol_message, strlen(protocol_message), 0, (struct sockaddr *)&game_nodes[2].net_addr, addr_len);
+
+            write_to_buffer((int*)area4,node_area_rows,node_area_cols);
+            sendto(server_socket, protocol_message, strlen(protocol_message), 0, (struct sockaddr *)&game_nodes[3].net_addr, addr_len);
+            printf("Sending new values!");
             // reset flags
 
             int area1_recv = 0;
