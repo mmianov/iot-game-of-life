@@ -498,6 +498,7 @@ int main(){
     timeout.tv_sec = 0;
     timeout.tv_usec = 1000;
 
+    int debug = 1;
     for(;;){
 
         // reset file descriptor sets and add server socket to watch list
@@ -551,7 +552,7 @@ int main(){
         }
         // if all areas are calculated (updated)
         if(area1_recv && area2_recv && area3_recv && area4_recv ){
-            printf("All areas received!\n");
+            printf("All areas received! (%d)\n",debug);
             // reassemble map
             int res_map[map_rows][map_cols];
             memset(res_map,0,sizeof(res_map));
