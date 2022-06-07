@@ -25,12 +25,12 @@
 
 int server_socket;
 
-struct sockaddr_in node_addr; // variable to perform operations on nodes during registration
+struct sockaddr_in node_addr; // variable to perform operations on nodes
 struct sockaddr_in nodes[MAX_NODES]; // variable to hold nodes in registration period
 int addr_len = sizeof(struct sockaddr_in);
 
 char received_message[MAX_MSG_SIZE]; // received message
-char register_message[MAX_MSG_SIZE]; // register message (to be merged into ALP later on)
+char protocol_message[5];
 
 
 // structure to hold information about nodes in the game
@@ -48,10 +48,9 @@ const int map_rows = 6;
 const int map_cols = 8;
 int area_rows = map_rows/2;
 int area_cols = map_cols/2;
-int node_area_rows = map_rows/2 + 2; // 2 additional rows for top and bottom bordering areas //
-int node_area_cols = map_cols/2 + 2; // 2 additional cols for left and right bordering areas //
+int node_area_rows = map_rows/2 + 2; // 2 additional rows for top and bottom bordering areas
+int node_area_cols = map_cols/2 + 2; // 2 additional cols for left and right bordering areas
 
-char protocol_message[5];
 int map[6][8];
 
 // --- GAME NODES FUNCTIONS ---
@@ -196,15 +195,15 @@ int open_registration(){
         if(FD_ISSET(server_socket, &read_fds)) {
             // receive message
             memset(&node_addr,0,sizeof(node_addr));
-            node_addr = receive_data(register_message);
+            node_addr = receive_data(received_message);
 
-            if(handle_message(register_message) == GAME_STATE_REGISTER && !is_registered(node_addr,nodes_to_connect)){
+            if(handle_message(received_message) == GAME_STATE_REGISTER && !is_registered(node_addr,nodes_to_connect)){
                 nodes[num_of_nodes] = node_addr;
                 num_of_nodes ++;
                 printf("Node %d/%d connected: %s\n\r",num_of_nodes,nodes_to_connect,inet_ntoa(node_addr.sin_addr));
-                memset(&register_message,0,sizeof(register_message));
-                register_message[0] = GAME_STATE_REGISTER_CONFIRM;
-                sendto(server_socket, register_message, strlen(register_message), 0, (struct sockaddr *)&node_addr, addr_len);
+                memset(&received_message,0,sizeof(received_message));
+                received_message[0] = GAME_STATE_REGISTER_CONFIRM;
+                sendto(server_socket, received_message, strlen(received_message), 0, (struct sockaddr *)&node_addr, addr_len);
             }
         }
             if(num_of_nodes >=nodes_to_connect){
@@ -362,7 +361,6 @@ void trim_area(int*frame_area,int *area){
 }
 
 
-
 void compute_game_of_life(int *arr,int *new_arr,int rows, int cols){
 
     // iterate over array
@@ -427,30 +425,6 @@ int receive_from_buffer(int *area, int rows, int cols){
 }
 
 int main(){
-//    int rows = 40;
-//    int cols = 90;
-//    int arr[rows][cols];
-//    memset(arr,0,rows*cols*sizeof(int));
-//    fill2DArray((int*)arr,rows,cols);
-//    //printf("Original array: \n");
-//    visualise_2Darray((int*)arr,rows,cols);
-//    sleep(1);
-//    system("clear");
-//
-//    int next_gen[rows][cols];
-//    memcpy(next_gen,arr,rows*cols*sizeof(int));
-//
-//    for(;;){
-////        // copy contents of current generation
-////        memcpy(next_gen,arr,rows*cols*sizeof(int));
-//        // compute next generation and save in next_gen array
-//        compute_game_of_life((int*)arr,(int*)next_gen,rows,cols);
-//        visualise_2Darray((int*)next_gen,rows,cols);
-//        sleep(1);
-//        system("clear");
-//        // set next generation to be current generation in next loop
-//        memcpy(arr,next_gen,rows*cols*sizeof(int));
-//    }
 
     // server setup
     initialize_server(&server_socket, SERVER_PORT);
@@ -557,7 +531,7 @@ int main(){
                 }
              }
             // if node sends area update
-            if(received_message[0] == 1<<3 | 0<<2 | 1<<1 | 0<<0){
+            if(received_message[0] == AREA_UPDATE_CODE){
                // receive untrimmed area
                receive_from_buffer((int*)temp_area,node_area_rows,node_area_cols);
                // trim area
