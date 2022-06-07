@@ -599,7 +599,7 @@ int main(){
             memcpy(map,res_map,sizeof(res_map));
             // play animation
             visualise_2DarrayNumbers((int*)res_map,map_rows,map_cols);
-            sleep(1);
+            //sleep(1);
             system("clear");
             //divide the map again
             divide_map((int*)area1,(int*)area2,(int*)area3,(int*)area4,0);
