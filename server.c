@@ -531,13 +531,18 @@ int main(){
 
     fd_set read_fds;
     printf("Przed for\n");
+    struct timeval timeout;
+    timeout.tv_sec = 0;
+    timeout.tv_usec = 1000;
+
+
     for(;;){
 
         printf("Waiting ...");
         // reset file descriptor sets and add server socket to watch list
         FD_ZERO(&read_fds);
         FD_SET(server_socket,&read_fds);
-        select(server_socket+1, &read_fds, NULL, NULL,NULL);
+        select(server_socket+1, &read_fds, NULL, NULL,timeout);
 
         // check for new connection to server
         if(FD_ISSET(server_socket, &read_fds)) {
