@@ -558,7 +558,7 @@ int main(){
                 }
              }
             // if node sends area update
-            if(handle_message(register_message) == AREA_UPDATE){
+            //if(handle_message(register_message) == AREA_UPDATE){
                // receive untrimmed area
                receive_from_buffer((int*)temp_area,node_area_rows,node_area_cols);
                // trim area
@@ -585,7 +585,7 @@ int main(){
                   area4_recv = 1;
                   printf("Received from node 4!\n;");
                }
-            }
+            //}
         }
         // if all areas are calculated (updated)
         if(area1_recv && area2_recv && area3_recv && area4_recv ){
