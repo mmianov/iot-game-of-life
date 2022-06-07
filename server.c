@@ -20,7 +20,7 @@
 #define AREA_UPDATE 2
 #define GAME_STATE_REGISTER_CONFIRM 0<<0 | 0<<1 | 0<<2 | 1<<3
 #define BOUNDARY_UPDATE_CODE  1<<0 | 1<<1 | 1<<2 | 1<<3
-#define AREA_UPDATE_CODE 1<<3 | 0<<2 | 1<<1 | 0<<0
+#define AREA_UPDATE_CODE 1<<3 | 0<<2 | 1<<1 | 0<< 0
 
 
 int server_socket;
@@ -151,7 +151,6 @@ int handle_message(char *message){
    int fourth_bit = (message[0] >> 3) & 1;
 
    if (first_bit == 0 && second_bit == 0 && third_bit == 0 && fourth_bit == 1){
-        //printf("Debug: received register message\n");
         return GAME_STATE_REGISTER;
    }
    else if (first_bit == 1 && second_bit == 0 && third_bit == 1 && fourth_bit== 0){
@@ -547,7 +546,7 @@ int main(){
         if(FD_ISSET(server_socket, &read_fds)) {
             // receive message
             memset(&node_addr,0,sizeof(node_addr));
-            node_addr = receive_data(register_message);
+            node_addr = receive_data(received_message);
 
             // find which node connected - node with id 1 will always be responsible for calculating area 1
             int current_node = 0;
@@ -558,7 +557,7 @@ int main(){
                 }
              }
             // if node sends area update
-            //if(handle_message(register_message) == AREA_UPDATE){
+            if(handle_message(received_message) == AREA_UPDATE){
                // receive untrimmed area
                receive_from_buffer((int*)temp_area,node_area_rows,node_area_cols);
                // trim area
@@ -585,7 +584,7 @@ int main(){
                   area4_recv = 1;
                   printf("Received from node 4!\n;");
                }
-            //}
+            }
         }
         // if all areas are calculated (updated)
         if(area1_recv && area2_recv && area3_recv && area4_recv ){
@@ -599,7 +598,7 @@ int main(){
             memcpy(map,res_map,sizeof(res_map));
             // play animation
             visualise_2DarrayNumbers((int*)res_map,map_rows,map_cols);
-            //sleep(1);
+            sleep(1);
             system("clear");
             //divide the map again
             divide_map((int*)area1,(int*)area2,(int*)area3,(int*)area4,0);
