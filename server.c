@@ -352,8 +352,9 @@ void trim_area(int*frame_area,int *area){
         for(int j=1;j<node_area_cols-1;j++){
             *((area+i*area_cols)+j) = *((frame_area+i*node_area_cols)+j);
     }
-
 }
+}
+
 
 
 void compute_game_of_life(int *arr,int *new_arr,int rows, int cols){
