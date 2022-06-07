@@ -507,7 +507,9 @@ int main(){
 
     memset(&protocol_message,0,sizeof(protocol_message));
     write_to_buffer((int*)area2,node_area_rows,node_area_cols);
-    sendto(server_socket, protocol_message, strlen(protocol_message), 0, (struct sockaddr *)&game_nodes[1].net_addr, addr_len);
+    if(sendto(server_socket, protocol_message, strlen(protocol_message), 0, (struct sockaddr *)&game_nodes[1].net_addr, addr_len) <0){
+        printf("ERROR %s (%s:%d) \n", strerror(errno));
+    }
     printf("Wyslano area 2 intial");
     sleep(0.1);
     memset(&protocol_message,0,sizeof(protocol_message));
