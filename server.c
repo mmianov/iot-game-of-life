@@ -473,24 +473,24 @@ int main(){
     memset(area1_trimmed,0,sizeof(area1_trimmed));
     int area2_trimmed[area_rows][area_cols];
     memset(area2_trimmed,0,sizeof(area1_trimmed));
-    int area3_trimmed[area_rows][area_cols];
-    memset(area3_trimmed,0,sizeof(area1_trimmed));
-    int area4_trimmed[area_rows][area_cols];
-    memset(area4_trimmed,0,sizeof(area1_trimmed));
+//    int area3_trimmed[area_rows][area_cols];
+//    memset(area3_trimmed,0,sizeof(area1_trimmed));
+//    int area4_trimmed[area_rows][area_cols];
+//    memset(area4_trimmed,0,sizeof(area1_trimmed));
 
 
     trim_area((int*)area1,(int*)area1_trimmed);
     trim_area((int*)area2,(int*)area2_trimmed);
-    trim_area((int*)area3,(int*)area3_trimmed);
-    trim_area((int*)area4,(int*)area4_trimmed);
-    printf("Trimmed area 1:\n");
+//    trim_area((int*)area3,(int*)area3_trimmed);
+//    trim_area((int*)area4,(int*)area4_trimmed);
+    printf("Trimmed area n 1:\n");
     visualise_2DarrayNumbers((int*)area1_trimmed,area_rows,area_cols);
-    printf("Trimmed area 2:\n");
+    printf("Trimmed area n 2:\n");
     visualise_2DarrayNumbers((int*)area2_trimmed,area_rows,area_cols);
-    printf("Trimmed area 3:\n");
-    visualise_2DarrayNumbers((int*)area3_trimmed,area_rows,area_cols);
-    printf("Trimmed area 4:\n");
-    visualise_2DarrayNumbers((int*)area4_trimmed,area_rows,area_cols);
+//    printf("Trimmed area 3:\n");
+//    visualise_2DarrayNumbers((int*)area3_trimmed,area_rows,area_cols);
+//    printf("Trimmed area 4:\n");
+//    visualise_2DarrayNumbers((int*)area4_trimmed,area_rows,area_cols);
 
 //    memset(&protocol_message,0,sizeof(protocol_message));
 //
