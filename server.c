@@ -52,7 +52,7 @@ int node_area_rows = map_rows/2 + 2; // 2 additional rows for top and bottom bor
 int node_area_cols = map_cols/2 + 2; // 2 additional cols for left and right bordering areas //
 
 char protocol_message[5];
-int map[map_rows][map_cols];
+int map[6][8];
 
 // --- GAME NODES FUNCTIONS ---
 
