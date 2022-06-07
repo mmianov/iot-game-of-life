@@ -557,7 +557,7 @@ int main(){
                 }
              }
             // if node sends area update
-            if(handle_message(received_message) == AREA_UPDATE){
+            if(received_message[0] == 1<<3 | 0<<2 | 1<<1 | 0<<0){
                // receive untrimmed area
                receive_from_buffer((int*)temp_area,node_area_rows,node_area_cols);
                // trim area
