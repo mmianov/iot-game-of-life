@@ -290,7 +290,7 @@ void divide_map(int *area1,int *area2,int *area3,int *area4){
     memset(map,0,sizeof(map));
     fill2DArray((int*)map,map_rows,map_cols);
     printf("Original map: \n");
-    visualise_2DarrayNumbers((int*)map,map_rows,map_cols);
+    visualise_2Darray((int*)map,map_rows,map_cols);
     sleep(2);
 
     int temp_area[node_area_rows][node_area_cols]; // area for calculations
