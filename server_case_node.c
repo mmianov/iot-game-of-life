@@ -466,7 +466,7 @@ int main(){
     game_nodes[1].area =(int**)area2;
     game_nodes[2].area =(int**)area3;
     game_nodes[3].area =(int**)area4;
-    display_game_nodes(game_nodes,game_nodes_amount);
+    //display_game_nodes(game_nodes,game_nodes_amount);
 
     memset(&protocol_message,0,sizeof(protocol_message));
 
@@ -488,7 +488,8 @@ int main(){
         receive_from_buffer((int*)area1_temp,node_area_rows,node_area_cols);
 
         // print next gen
-        visualise_2DarrayNumbers((int*)area1_temp,node_area_rows,node_area_cols);
+
+        visualise_2Darray((int*)area1_temp,node_area_rows,node_area_cols);
         sleep(1);
         system("clear");
         // the line below is for simulating 1 node game of life - noramlly it would have to be written to map without frames, then divided again and resent
