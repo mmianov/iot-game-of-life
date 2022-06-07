@@ -144,7 +144,6 @@ void compute_game_of_life(int *arr,int *new_arr,int rows, int cols){
 }
 
 
-
 void visualise_2DarrayNumbers(int *array,int rows, int cols){
     for(int i =0;i<rows;i++){
         for(int j=0;j<cols;j++){
@@ -164,8 +163,8 @@ int write_to_buffer(int *area, int rows, int cols){
     protocolBuffer[0] = AREA_UPDATE_CODE;
     int bytes = 1;
     int shift = 0;
-    for(int i=1;i<rows-1;i++){
-        for(int j=1;j<cols-1;j++){
+    for(int i=0;i<rows;i++){
+        for(int j=0;j<cols;j++){
             if (shift==8){
                 shift = 0;
                 bytes++;

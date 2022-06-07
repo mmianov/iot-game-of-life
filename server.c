@@ -461,51 +461,44 @@ int main(){
     int area3[node_area_rows][node_area_cols];
     int area4[node_area_rows][node_area_cols];
     divide_map((int*)area1,(int*)area2,(int*)area3,(int*)area4);
-    int area1_temp[node_area_rows][node_area_cols];
+
+    game_nodes[0].area =(int**)area1;
+    game_nodes[1].area =(int**)area2;
+    game_nodes[2].area =(int**)area3;
+    game_nodes[3].area =(int**)area4;
+    display_game_nodes(game_nodes,game_nodes_amount);
+
+    memset(&protocol_message,0,sizeof(protocol_message));
+
+    //int *protocol_message_test = (int*) game_nodes[0].area;
+    // node_area_rows = 5, node_area_cols = 6
+    int written = write_to_buffer((int*)area1,node_area_rows,node_area_cols);
+    printf("Wrote %d bytes\n",written);
 
     // send initial area
     sendto(server_socket, protocol_message, strlen(protocol_message), 0, (struct sockaddr *)&game_nodes[0].net_addr, addr_len);
+    int area1_temp[node_area_rows][node_area_cols];
 
-    memset(&protocol_message,0,sizeof(protocol_message));
-    // receive area update from node
-    game_nodes[0].net_addr = receive_data(protocol_message);
-    printf("Received area message\n");
-    // get area from buffer
-    receive_from_buffer((int*)area1_temp,node_area_rows,node_area_cols);
+    for(;;){
+        memset(&protocol_message,0,sizeof(protocol_message));
+        // receive are update from node
+        game_nodes[0].net_addr = receive_data(protocol_message);
+        printf("Received area message\n");
+        // get area from buffer
+        receive_from_buffer((int*)area1_temp,node_area_rows,node_area_cols);
 
-    // print next gen
-    printf("Calculated area: \n");
-    visualise_2DarrayNumbers((int*)area1_temp,node_area_rows,node_area_cols);
+        // print next gen
+        visualise_2DarrayNumbers((int*)area1_temp,node_area_rows,node_area_cols);
+        sleep(1);
+        system("clear");
+        // the line below is for simulating 1 node game of life - noramlly it would have to be written to map without frames, then divided again and resent
+        write_to_buffer((int*)area1_temp,node_area_rows,node_area_cols);
+        sendto(server_socket, protocol_message, strlen(protocol_message), 0, (struct sockaddr *)&game_nodes[0].net_addr, addr_len);
+        //printf("Sent new area to caluculate!");
+        // potem: złączenie mapy, ponowny podział i wysłanie
+    }
 
-    int re_map[map_rows][map_cols];
-
-    reassemble_map((int*)re_map,(int*)area1_temp,(int*)area2,(int*)area3,(int*)area4);
-    printf("Reassembled map: \n");
-    visualise_2DarrayNumbers((int*)re_map,map_rows,map_cols);
-
-
-    // the line below is for simulating 1 node game of life - noramlly it would have to be written to map without frames, then divided again and resent
-//    write_to_buffer((int*)area1_temp,node_area_rows,node_area_cols);
-//    sendto(server_socket, protocol_message, strlen(protocol_message), 0, (struct sockaddr *)&game_nodes[0].net_addr, addr_len);
-
-
-
-
-
-//    game_nodes[0].area =(int**)area1;
-//    game_nodes[1].area =(int**)area2;
-//    game_nodes[2].area =(int**)area3;
-//    game_nodes[3].area =(int**)area4;
-//    display_game_nodes(game_nodes,game_nodes_amount);
-//
-//    memset(&protocol_message,0,sizeof(protocol_message));
-//
-//    //int *protocol_message_test = (int*) game_nodes[0].area;
-//    // node_area_rows = 5, node_area_cols = 6
-//    int written = write_to_buffer((int*)area1,node_area_rows,node_area_cols);
-//    printf("Wrote %d bytes\n",written);
-
-
+    close(server_socket);
     // TODO 1. zmienić area1 na game_node[0].area w write_to_buffer
     // TODO 2. odebrać wiadomość po stronie node'a, wpisać do tablicy, policzyć next_gen, - DONE
     // wpisać bajt po bajcie do tablicy, odesłać
@@ -515,32 +508,6 @@ int main(){
     // TODO5 ! Dodać obsługę rozłączenia node gdy za długo nie odeśle area
     // TODO6 ! gra w zycie na granicy mapy
     // Kwestia do zastanowienia: potwierdzenie odbioru
-
-
-//    // send initial area
-//    sendto(server_socket, protocol_message, strlen(protocol_message), 0, (struct sockaddr *)&game_nodes[0].net_addr, addr_len);
-//    int area1_temp[node_area_rows][node_area_cols];
-//
-//    for(;;){
-//        memset(&protocol_message,0,sizeof(protocol_message));
-//        // receive are update from node
-//        game_nodes[0].net_addr = receive_data(protocol_message);
-//        printf("Received area message\n");
-//        // get area from buffer
-//        receive_from_buffer((int*)area1_temp,node_area_rows,node_area_cols);
-//
-//        // print next gen
-//        visualise_2DarrayNumbers((int*)area1_temp,node_area_rows,node_area_cols);
-//        sleep(1);
-//        system("clear");
-//        // the line below is for simulating 1 node game of life - noramlly it would have to be written to map without frames, then divided again and resent
-//        write_to_buffer((int*)area1_temp,node_area_rows,node_area_cols);
-//        sendto(server_socket, protocol_message, strlen(protocol_message), 0, (struct sockaddr *)&game_nodes[0].net_addr, addr_len);
-//        //printf("Sent new area to caluculate!");
-//        // potem: złączenie mapy, ponowny podział i wysłanie
-//    }
-//
-//    close(server_socket);
 
 
 }
