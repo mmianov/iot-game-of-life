@@ -43,14 +43,14 @@ struct game_node{
 };
 
 int game_nodes_amount = 4;
-const int map_rows = 6;
-const int map_cols = 8;
+const int map_rows = 20;
+const int map_cols = 30;
 int area_rows = map_rows/2;
 int area_cols = map_cols/2;
 int node_area_rows = map_rows/2 + 2; // 2 additional rows for top and bottom bordering areas //
 int node_area_cols = map_cols/2 + 2; // 2 additional cols for left and right bordering areas //
 
-char protocol_message[5];
+char protocol_message[77];
 
 // --- GAME NODES FUNCTIONS ---
 

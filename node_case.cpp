@@ -10,10 +10,11 @@
 
 #define MAX_BUFFER 64
 #define REQUEST_BUFFER 1
-#define RECEIVE_BUFFER 10
+#define RECEIVE_BUFFER 100
 #define BOUNDARY_UPDATE_CODE  1<<0 | 1<<1 | 1<<2 | 1<<3
 #define AREA_UPDATE_CODE 1<<3 | 0<<2 | 1<<1 | 0<<0
 
+#define PROTOCOL_BUFFER 77
 
 byte mac[] =  {0x01,0x43,0x09,0x67,0x89,0xab};
 ZsutEthernetUDP Udp;
@@ -24,11 +25,11 @@ unsigned int remotePort = UDP_REMOTE_PORT;
 
 unsigned char requestBuffer[REQUEST_BUFFER];
 unsigned char receiveBuffer[MAX_BUFFER];
-unsigned char protocolBuffer[48];
+unsigned char protocolBuffer[PROTOCOL_BUFFER];
 
 uint16_t measure;
 uint32_t timer;
-int area[5][6];
+int area[12][17];
 int registered = 0;
 
 
@@ -74,8 +75,8 @@ int receive_area(){
              Serial.print("[*]Received boundary update message!\n");
              int shift = 0;
              int bytes = 1;
-             for(int i=0;i<5;i++){
-                for(int j=0;j<6;j++){
+             for(int i=0;i<12;i++){
+                for(int j=0;j<17;j++){
                    if(shift == 8){
                       shift = 0;
                       bytes++;
@@ -201,22 +202,22 @@ void loop(){
     if(received_area){
 
         // copy received array to the one that will hold the state of the new generation
-        int next_gen_area[5][6];
-        memcpy(next_gen_area,area,5*6*sizeof(int));
+        int next_gen_area[12][17];
+        memcpy(next_gen_area,area,12*17*sizeof(int));
 
         // compute next generation
-        compute_game_of_life((int*)area,(int*)next_gen_area,5,6);
+        compute_game_of_life((int*)area,(int*)next_gen_area,12,17);
         Serial.println("[*]Computed game of life");
 
         // insert into protcol buffer
         memset(protocolBuffer,0,sizeof(protocolBuffer));
         // insert bits into buffer
-        int written_bytes = write_to_buffer((int*)next_gen_area,5,6);
+        int written_bytes = write_to_buffer((int*)next_gen_area,12,17);
         Serial.println("[*]Prepared protocol buffer");
 
         // send to server
         Udp.beginPacket(serverIP,remotePort);
-        int area_updated = Udp.write(protocolBuffer, 48);
+        int area_updated = Udp.write(protocolBuffer, PROTOCOL_BUFFER);
         Udp.endPacket();
         Serial.println("[*]Sent area update to server");
 
